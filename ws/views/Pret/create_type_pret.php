@@ -136,11 +136,11 @@
 <div class="header"><div class="logo">MNA_Banque</div> - Gestion des ressources</div>
     <div class="layout">
         <nav class="sidebar">
-            <a href="list_pret.php">Accueil</a>
-            <a href="../Ressources/ajout_ressource.php">Ajouter une ressource</a>
-            <a href="create_type_pret.php">Ajouter un type de pret</a>
-            <a href="create_pret.php">Ajouter un pret</a>
+        <a href="list_pret.php">Accueil</a>
+            <a href="../Ressources/settings.php">Parametres</a>
+            <a href="validation_pret.php">Validation pret</a>
             <a href="list_interet_mensuel.php">Interet mensuel</a>
+            <a href="simulation_pret.php">Simulation de prêt</a>
             <a href="#">Déconnexion</a>
         </nav>
         <main class="main-content">
