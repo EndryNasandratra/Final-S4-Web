@@ -43,6 +43,7 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
 <body>
   <a href="views/entreprise/creation_ressource.php">Ajouter ressource</a>
   <a href="views/entreprise/interet.php">Voir les interets gagnés</a>
+  <a href="views/simulateur/simulateur.php">Simuler</a>
   <h1>Gestion des étudiants</h1>
 
   <div>
