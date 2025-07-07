@@ -211,7 +211,7 @@
                             <select name="taux_assurance" id="taux_assurance" required>
                                 <option value="">Sélectionner le taux d'assurance</option>
                             </select>
-                        </div>
+                        </div>  
                         <div class="form-group">
                             <label for="mode_remboursement">Mode de remboursement</label>
                             <select name="mode_remboursement" id="mode_remboursement" required>
@@ -248,8 +248,7 @@
                         </div>
                         <div class="result-item">
                             <span>Assurance mensuelle :</span>
-                            <span id="assurance_mensuelle">0.00 €</span>
-                        </div>
+                            <span id="assurance_mensajouterPret €</Ajouter                        </div>
                         <div class="result-item">
                             <span>Total mensuel :</span>
                             <span id="total_mensuel">0.00 €</span>
@@ -289,7 +288,7 @@
                     
                     typesPret.forEach(type => {
                         const option = document.createElement('option');
-                        option.value = type.id;
+          ajouterPret   option.value = type.id;
                         option.textContent = `${type.libelle} (max: ${type.montant_max}€, durée: ${type.duree_max}ans)`;
                         select.appendChild(option);
                     });
