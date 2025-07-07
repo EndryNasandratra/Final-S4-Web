@@ -88,18 +88,25 @@
                 font-size: 1.3rem;
             }
         }
+        footer {
+            margin-top: 1rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo">MNA_Banque</div>
-        <form action="login.php" method="post"> 
-            <label for="username">Utilisateur</label>
+        <form action="../pret/list_pret.php" method="post"> 
+            <!-- <label for="username">Utilisateur</label>
             <input type="text" name="username" placeholder="Nom d'utilisateur" required>
             <label for="password">Mot de passe</label>
-            <input type="password" name="password" placeholder="Mot de passe" required>
+            <input type="password" name="password" placeholder="Mot de passe" required> -->
             <button type="submit">Se connecter</button>
         </form>
     </div>
+    <footer>
+            <span>Copyright 2025 @ MNA_Banque</span>
+    </footer>
 </body>
 </html>
