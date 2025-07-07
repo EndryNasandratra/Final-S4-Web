@@ -1,20 +1,16 @@
 <?php
-
-namespace models;
-
-require '../vendor/autoload.php';
-require '../db.php';
-
-use PDO;
+require_once __DIR__ . '/../db.php';
 
 class TestModel
 {
-    final private  $db;
+    private PDO $db;
+
     public function __construct()
     {
         $this->db = getDB();
     }
-    public function getAllEtudiant()
+
+    public function getAllEtudiant(): array
     {
         $stmt = $this->db->query("SELECT * FROM etudiant");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
