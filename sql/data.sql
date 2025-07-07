@@ -3,7 +3,7 @@ INSERT INTO clients (nom, prenom, email, password) VALUES
 ('Randria', 'Mickael', 'mickael@email.com', 'pass1'),
 ('Rajaona', 'Fanja', 'fanja@email.com', 'pass2'),
 ('Rakoto', 'Jean', 'jean@email.com', 'pass3'),
-('Andria', 'Lova', 'lova@email.com', 'pass4'),
+('Andria', 'Lova', 'lova@email.com', 'pass4'),  
 ('Rasoanaivo', 'Sarah', 'sarah@email.com', 'pass5');
 
 -- Employés

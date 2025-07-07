@@ -1,18 +1,20 @@
 <?php
-// Inclure ici votre contrôleur ou la fonction login si besoin
+require_once '../../db.php'; // Chemin vers getDB()
 require_once '../../controllers/LoginController.php';
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
+    $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    // Appel du contrôleur (adapte selon ta logique)
-    $loginController = new LoginController($username); // Remplacez $username par l'argument attendu si besoin
-    $result = $loginController->login($username, $password);
+    // Utilise la fonction de connexion existante
+    $pdo = getDB();
 
-    if ($result) {
-        // Connexion réussie, redirige vers la page souhaitée
+    // Passe l'objet PDO au contrôleur
+    $loginController = new LoginController($pdo);
+    $result = $loginController->login($email, $password);
+
+    if ($result && $result['success']) {
         header('Location: /dashboard.php');
         exit;
     } else {
@@ -128,8 +130,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="error-message"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
         <form action="" method="post"> 
-            <label for="username">Utilisateur</label>
-            <input type="text" name="username" placeholder="Nom d'utilisateur" required>
+            <label for="email">Email</label>
+            <input type="text" name="email" placeholder="Nom d'utilisateur" required>
             <label for="password">Mot de passe</label>
             <input type="password" name="password" placeholder="Mot de passe" required>
             <button type="submit">Se connecter</button>

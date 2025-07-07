@@ -10,9 +10,9 @@ class LoginController
         $this->loginModel = new LoginModel($db);
     }
 
-    public function login($username, $password)
+    public function login($email, $password)
     {
-        $user = $this->loginModel->validateUser($username, $password);
+        $user = $this->loginModel->validateUser($email, $password);
         if ($user) {
             // Ici, tu peux gérer la session ou retourner l'utilisateur
             return [

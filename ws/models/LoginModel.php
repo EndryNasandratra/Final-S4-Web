@@ -8,10 +8,10 @@ class LoginModel
         $this->db = $db;
     }
 
-    public function validateUser($nom, $password)
+    public function validateUser($email, $password)
     {
-        $stmt = $this->db->prepare("SELECT * FROM clients WHERE nom = :nom");
-        $stmt->bindParam(':nom', $nom);
+        $stmt = $this->db->prepare("SELECT * FROM clients WHERE email = :email");
+        $stmt->bindParam(':email', $email);
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
