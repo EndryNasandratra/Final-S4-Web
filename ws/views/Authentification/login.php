@@ -1,3 +1,25 @@
+<?php
+// Inclure ici votre contrôleur ou la fonction login si besoin
+require_once '../../controllers/LoginController.php';
+
+$error = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    // Appel du contrôleur (adapte selon ta logique)
+    $loginController = new LoginController($username); // Remplacez $username par l'argument attendu si besoin
+    $result = $loginController->login($username, $password);
+
+    if ($result) {
+        // Connexion réussie, redirige vers la page souhaitée
+        header('Location: /dashboard.php');
+        exit;
+    } else {
+        $error = "Nom d'utilisateur ou mot de passe incorrect.";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,21 +114,29 @@
             margin-top: 1rem;
             text-align: center;
         }
+        .error-message {
+            color: red;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo">MNA_Banque</div>
-        <form action="../pret/list_pret.php" method="post"> 
-            <!-- <label for="username">Utilisateur</label>
+        <?php if (!empty($error)): ?>
+            <div class="error-message"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+        <form action="" method="post"> 
+            <label for="username">Utilisateur</label>
             <input type="text" name="username" placeholder="Nom d'utilisateur" required>
             <label for="password">Mot de passe</label>
-            <input type="password" name="password" placeholder="Mot de passe" required> -->
+            <input type="password" name="password" placeholder="Mot de passe" required>
             <button type="submit">Se connecter</button>
         </form>
     </div>
     <footer>
-            <span>Copyright 2025 @ MNA_Banque</span>
+        <span>Copyright 2025 @ MNA_Banque</span>
     </footer>
 </body>
 </html>
