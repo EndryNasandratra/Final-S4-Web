@@ -843,7 +843,7 @@ through the `set` method.
 Flight::set('flight.log_errors', true);
 ```
 
-The following is a list of all the available configuration settings:
+The following is a list of all the available configuration Parametres:
 
     flight.base_url - Override the base url of the request. (default: null)
     flight.case_sensitive - Case sensitive matching for URLs. (default: false)
@@ -871,7 +871,7 @@ Flight::get($key) // Gets a variable.
 Flight::set($key, $value) // Sets a variable.
 Flight::has($key) // Checks if a variable is set.
 Flight::clear([$key]) // Clears a variable.
-Flight::init() // Initializes the framework to its default settings.
+Flight::init() // Initializes the framework to its default Parametres.
 Flight::app() // Gets the application object instance
 ```
 
