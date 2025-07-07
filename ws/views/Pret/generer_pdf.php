@@ -29,7 +29,7 @@ class MYPDF extends TCPDF {
         $this->Cell(0, 15, 'MNA_Banque', 0, false, 'C', 0, '', 0, false, 'M', 'M');
         $this->Ln();
         $this->SetFont('helvetica', '', 10);
-        $this->Cell(0, 5, 'Simulation de prêt', 0, false, 'C', 0, '', 0, false, 'M', 'M');
+        $this->Cell(0, 5, 'Ajout de prêt', 0, false, 'C', 0, '', 0, false, 'M', 'M');
         $this->Ln(20);
     }
     
@@ -46,8 +46,8 @@ $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8',
 // Définition des métadonnées
 $pdf->SetCreator('MNA_Banque');
 $pdf->SetAuthor('MNA_Banque');
-$pdf->SetTitle('Simulation de prêt - ' . $pret_data['numero']);
-$pdf->SetSubject('Simulation de prêt');
+$pdf->SetTitle('Ajout de prêt - ' . $pret_data['numero']);
+$pdf->SetSubject('Ajout de prêt');
 $pdf->SetKeywords('prêt, simulation, banque');
 
 // Définition des marges
@@ -66,7 +66,7 @@ $pdf->AddPage();
 
 // Titre principal
 $pdf->SetFont('helvetica', 'B', 16);
-$pdf->Cell(0, 10, 'SIMULATION DE PRÊT', 0, 1, 'C');
+$pdf->Cell(0, 10, 'Ajout de prêt', 0, 1, 'C');
 $pdf->Ln(5);
 
 // Informations du prêt
@@ -193,5 +193,5 @@ $pdf->SetFont('helvetica', '', 9);
 $pdf->Cell(0, 5, $pret_data['employe'], 0, 1, 'L');
 
 // Sortie du PDF
-$pdf->Output('Simulation_pret_' . $pret_data['numero'] . '.pdf', 'D');
+$pdf->Output('ajout_pret_' . $pret_data['numero'] . '.pdf', 'D');
 ?> 

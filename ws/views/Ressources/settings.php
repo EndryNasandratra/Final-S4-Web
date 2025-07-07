@@ -45,11 +45,31 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
             background: #f8fafc;
             box-shadow: 0 4px 24px rgba(0,0,0,0.08);
             padding: 2rem;
+            gap: 2rem;
+        }
+        .main-title {
+            color: #2563eb;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            flex: 1;
+        }
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .right-column {
+            display: flex;
+            flex-direction: column;
             gap: 2rem;
         }
         .container {
@@ -57,9 +77,11 @@
             border: 1px solid #cbd5e1;
             border-radius: 8px;
             padding: 2rem 1.5rem;
-            width: 100%;
-            max-width: 500px;
             box-sizing: border-box;
+            height: fit-content;
+        }
+        .container.full-width {
+            grid-column: 1 / -1;
         }
         .logo {
             font-size: 2rem;
@@ -83,12 +105,18 @@
         label {
             color: #1e293b;
             margin-bottom: 0.2rem;
+            font-weight: 500;
         }
         input, select {
             padding: 0.5rem 0.8rem;
             border: 1px solid #cbd5e1;
             border-radius: 4px;
             font-size: 1rem;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
         button {
             background: #2563eb;
@@ -98,9 +126,48 @@
             padding: 0.6rem 1rem;
             font-size: 1rem;
             cursor: pointer;
+            font-weight: 500;
         }
         button:hover {
             background: #1d4ed8;
+        }
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        .statistics-card {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .statistics-card h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+        .statistics-card p {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .left-column, .right-column {
+                gap: 1.5rem;
+            }
         }
         @media (max-width: 700px) {
             .layout {
@@ -117,8 +184,8 @@
             .main-content {
                 padding: 1rem;
             }
-            .container {
-                max-width: 100%;
+            .content-grid {
+                gap: 1rem;
             }
         }
     </style>
@@ -131,35 +198,51 @@
             <a href="settings.php">Parametres</a>
             <a href="../pret/validation_pret.php">Validation pret</a>
             <a href="../pret/list_interet_mensuel.php">Interet mensuel</a>
-            <a href="../pret/simulation_pret.php">Simulation de prêt</a>
+            <a href="../pret/ajout_pret.php">Ajout de prêt</a>
             <a href="#">Déconnexion</a>
         </nav>
         <main class="main-content">
-            <h1>Parametres</h1>
-            <div class="container">
-                <h2>Gestion des ressources</h2>
-                <div id="ressourcesList">
-                    <p>Chargement des ressources...</p>
+            <h1 class="main-title">Paramètres</h1>
+            
+            <div class="content-grid">
+                <div class="left-column">
+                    <div class="container">
+                        <h2>Ajouter un type de ressource</h2>
+                        <form id="addTypeRessourceForm">
+                            <label for="libelle">Libellé du type :</label>
+                            <input type="text" id="libelle" name="libelle" placeholder="Ex: Liquidités, Immobilisations..." required>
+                            <button type="submit">Ajouter le type</button>
+                        </form>
+                    </div>
+                    
+                    <div class="container">
+                        <h2>Ajouter une ressource</h2>
+                        <form id="addRessourceForm">
+                            <label for="type">Type de ressource :</label>
+                            <select id="type" name="type" required>
+                                <option value="">-- Sélectionner --</option>
+                            </select>
+                            <label for="valeur">Valeur :</label>
+                            <input type="number" step="0.01" id="valeur" name="valeur" placeholder="0.00" required>
+                            <button type="submit">Ajouter la ressource</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="container">
-                <h2>Ajouter une ressource</h2>
-                <form id="addRessourceForm">
-                    <label for="type">Type de ressource :</label>
-                    <select id="type" name="type" required>
-                        <option value="">-- Sélectionner --</option>
-                    </select>
-                    <label for="valeur">Valeur :</label>
-                    <input type="number" step="0.01" id="valeur" name="valeur" required>
-                    <button type="submit">Ajouter</button>
-                </form>
-            </div>
-            
-            <div class="container">
-                <h2>Statistiques</h2>
-                <div id="statistics">
-                    <p>Chargement des statistiques...</p>
+                
+                <div class="right-column">
+                    <div class="container">
+                        <h2>Statistiques</h2>
+                        <div id="statistics">
+                            <p>Chargement des statistiques...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="container">
+                        <h2>Liste des ressources</h2>
+                        <div id="ressourcesList">
+                            <p>Chargement des ressources...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -174,21 +257,19 @@
         // Charger les types de ressources
         async function loadTypesRessource() {
             try {
-                const response = await fetch('/ws/api/types-ressource');
+                const response = await fetch('http://localhost/Final-S4-Web/ws/types-ressource');
                 const data = await response.json();
                 
-                if (data.success) {
-                    typesRessource = data.data;
-                    const select = document.getElementById('type');
-                    select.innerHTML = '<option value="">-- Sélectionner --</option>';
-                    
-                    typesRessource.forEach(type => {
-                        const option = document.createElement('option');
-                        option.value = type.id;
-                        option.textContent = type.libelle;
-                        select.appendChild(option);
-                    });
-                }
+                typesRessource = data;
+                const select = document.getElementById('type');
+                select.innerHTML = '<option value="">-- Sélectionner --</option>';
+                
+                typesRessource.forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type.id;
+                    option.textContent = type.libelle;
+                    select.appendChild(option);
+                });
             } catch (error) {
                 console.error('Erreur lors du chargement des types de ressources:', error);
             }
@@ -197,17 +278,11 @@
         // Charger les ressources
         async function loadRessources() {
             try {
-                const response = await fetch('/ws/api/ressources');
+                const response = await fetch('http://localhost/Final-S4-Web/ws/ressources');
                 const data = await response.json();
                 
-                if (data.success) {
-                    ressources = data.data;
-                    displayRessources(ressources);
-                } else {
-                    console.error('Erreur:', data.message);
-                    document.getElementById('ressourcesList').innerHTML = 
-                        '<p style="color: red;">Erreur lors du chargement des ressources</p>';
-                }
+                ressources = data;
+                displayRessources(ressources);
             } catch (error) {
                 console.error('Erreur réseau:', error);
                 document.getElementById('ressourcesList').innerHTML = 
@@ -249,15 +324,15 @@
         // Charger les statistiques
         async function loadStatistics() {
             try {
-                const response = await fetch('/ws/api/ressources/total');
+                const response = await fetch('http://localhost/Final-S4-Web/ws/ressources/total');
                 const data = await response.json();
                 
                 if (data.success) {
                     const total = data.data.total;
                     document.getElementById('statistics').innerHTML = `
-                        <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #cbd5e1;">
-                            <h3 style="color: #2563eb; margin-bottom: 0.5rem;">Total des ressources</h3>
-                            <p style="font-size: 1.5rem; font-weight: bold; color: #059669;">${formatCurrency(total)}</p>
+                        <div class="statistics-card">
+                            <h3>Total des ressources</h3>
+                            <p>${formatCurrency(total)}</p>
                         </div>
                     `;
                 }
@@ -276,6 +351,42 @@
             }).format(amount || 0);
         }
 
+        // Gérer l'ajout d'un type de ressource
+        document.getElementById('addTypeRessourceForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const libelle = document.getElementById('libelle').value.trim();
+
+            if (!libelle) {
+                alert('Veuillez saisir un libellé');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost/Final-S4-Web/ws/types-ressource', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ libelle: libelle })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    alert('Type de ressource ajouté avec succès !');
+                    document.getElementById('libelle').value = '';
+                    // Recharger les types de ressources
+                    loadTypesRessource();
+                } else {
+                    alert('Erreur lors de l\'ajout: ' + (result.error || 'Erreur inconnue'));
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de l\'ajout du type de ressource');
+            }
+        });
+
         // Gérer l'ajout d'une ressource
         document.getElementById('addRessourceForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -288,10 +399,34 @@
                 return;
             }
 
-            // Ici, on enverrait les données au serveur pour ajouter la ressource
-            alert('Fonctionnalité d\'ajout à implémenter');
-            // Recharger les ressources après ajout
-            // loadRessources();
+            try {
+                const response = await fetch('http://localhost/Final-S4-Web/ws/ressources', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        id_type_ressource: typeId,
+                        valeur: valeur 
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    alert('Ressource ajoutée avec succès !');
+                    document.getElementById('type').value = '';
+                    document.getElementById('valeur').value = '';
+                    // Recharger les ressources et statistiques
+                    loadRessources();
+                    loadStatistics();
+                } else {
+                    alert('Erreur lors de l\'ajout: ' + (result.error || 'Erreur inconnue'));
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de l\'ajout de la ressource');
+            }
         });
 
         // Fonctions d'action (à implémenter)

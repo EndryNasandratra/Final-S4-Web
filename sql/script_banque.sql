@@ -88,8 +88,8 @@ CREATE TABLE pret (
 CREATE TABLE statut_pret (
     id INT AUTO_INCREMENT PRIMARY KEY,
     libelle VARCHAR(255) NOT NULL,
-    id_employe INT NOT NULL,
-    FOREIGN KEY (id_employe) REFERENCES employes(id)
+    id_pret INT NOT NULL,
+    FOREIGN KEY (id_pret) REFERENCES pret(id)
 );
 
 CREATE TABLE remboursement (
