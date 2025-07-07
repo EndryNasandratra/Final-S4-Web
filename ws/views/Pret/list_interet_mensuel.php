@@ -184,7 +184,7 @@
             <a href="../Ressources/settings.php">Parametres</a>
             <a href="validation_pret.php">Validation pret</a>
             <a href="list_interet_mensuel.php">Interet mensuel</a>
-            <a href="simulation_pret.php">Simulation de prêt</a>
+            <a href="ajout_pret.php">Ajout de prêt</a>
             <a href="#">Déconnexion</a>
         </nav>
         <main class="main-content">
