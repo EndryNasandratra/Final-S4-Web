@@ -5,6 +5,9 @@ INSERT INTO clients (nom, prenom, email, password) VALUES
 ('Rakoto', 'Jean', 'jean@email.com', 'pass3'),
 ('Andria', 'Lova', 'lova@email.com', 'pass4'),  
 ('Rasoanaivo', 'Sarah', 'sarah@email.com', 'pass5');
+curl -X POST http://localhost/ITU/S4/Final-S4-Web/ws/login \
+     -d "email=mickael@email.com" \
+     -d "password=pass1"
 
 -- Employés
 INSERT INTO employes (nom, prenom, email, password) VALUES

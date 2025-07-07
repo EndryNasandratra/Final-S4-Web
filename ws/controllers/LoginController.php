@@ -1,29 +1,26 @@
 <?php
 require_once __DIR__ . '/../models/LoginModel.php';
+require_once __DIR__ . '/../helpers/Utils.php';
 
 class LoginController
 {
-    private $loginModel;
-
-    public function __construct($db)
+    public static function login()
     {
-        $this->loginModel = new LoginModel($db);
-    }
+        $request = Flight::request();
+        $email = $request->data->email;
+        $password = $request->data->password;
 
-    public function login($email, $password)
-    {
-        $user = $this->loginModel->validateUser($email, $password);
-        if ($user) {
-            // Ici, tu peux gérer la session ou retourner l'utilisateur
-            return [
+        $result = LoginModel::validateUser($email, $password);
+
+        if ($result) {
+            Flight::json([
                 'success' => true,
-                'user' => $user
-            ];
+            ]);
         } else {
-            return [
+            Flight::json([
                 'success' => false,
-                'message' => 'Nom d\'utilisateur ou mot de passe incorrect'
-            ];
+                'error' => "Nom d'utilisateur ou mot de passe incorrect"
+            ]);
         }
     }
 }
