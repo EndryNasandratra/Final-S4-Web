@@ -25,7 +25,7 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
       border-collapse: collapse;
       width: 100%;
       margin-top: 20px;
-    }
+    } 
 
     th,
     td {
@@ -42,6 +42,7 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
 
 <body>
   <a href="views/entreprise/creation_ressource.php">Ajouter ressource</a>
+  <a href="views/entreprise/interet.php">Voir les interets gagnés</a>
   <h1>Gestion des étudiants</h1>
 
   <div>

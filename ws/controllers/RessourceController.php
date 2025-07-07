@@ -32,12 +32,33 @@ class RessourceController
                 "estEntree" => true,
                 "date_historique" => $date
             ]);
-            
+
             AppModel::update("ressources", ["valeur" => $newRessouceValue, "id" => $ressource["id"]], "id");
 
             Flight::json(['status' => 'success', 'message' => 'Ressource ajoutée avec succès !'], 201);
         } catch (Exception $e) {
             Flight::json(['error' => 'Erreur lors de la création de la ressource', 'message' => $e->getMessage()], 500);
         }
+    }
+    public static function diminuerRessource($montant)
+    {
+        $data = Flight::request()->data;
+        $ressource = AppModel::getById("ressources", "id_type_resssource", $data->id_type_ressource);
+        $newRessouceValue =   $ressource["valeur"] - $data->valeur;
+        if ($newRessouceValue < 0) {
+            return false;
+        }
+        $now = new DateTime();
+        $date = $now->format('Y-m-d');
+        AppModel::insert('historique_ressource', [
+            'id_ressource' => $ressource["id"],
+            'valeur' => $data->valeur,
+            "estEntree" => false,
+            "date_historique" => $date
+        ]);
+
+        AppModel::update("ressources", ["valeur" => $newRessouceValue, "id" => $ressource["id"]], "id");
+
+        Flight::json(['status' => 'success', 'message' => 'Ressource ajoutée avec succès !'], 201);
     }
 }
