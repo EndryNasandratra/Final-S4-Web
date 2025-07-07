@@ -1,9 +1,10 @@
 <?php
-
 require_once __DIR__ . '/../models/SimulationModel.php';
+require_once __DIR__ . '/../models/PDFModel.php';
 
 class SimulationController
 {
+
     public static function displaySimulator()
     {
         Flight::render('views/simulateur/simulateur.php');
@@ -12,57 +13,121 @@ class SimulationController
     public static function handleCalculation()
     {
         $data = Flight::request()->data;
-        $montant = (float) $data->montant;
-        $dureeMois = (int) $data->duree_mois;
+        $id_taux_pret = $data['id_taux_pret'] ?? null;
+        $montant = $data['montant'] ?? 0;
+        $duree_mois = $data['duree_mois'] ?? 0;
+        $include_assurance = filter_var($data['include_assurance'] ?? false, FILTER_VALIDATE_BOOLEAN);
 
-        if ($montant <= 0 || $dureeMois <= 0) {
-            Flight::json(['error' => 'Le montant et la durée doivent être positifs.'], 400);
-            return;
-        }
+        error_log("handleCalculation - include_assurance: " . ($include_assurance ? 'true' : 'false')); // Débogage
 
         try {
-            $tauxPret = SimulationModel::getTauxAnuel($dureeMois, $montant);
-
-            if (!$tauxPret) {
-                Flight::json(['error' => 'Aucun taux trouvé pour ce montant et cette durée.'], 404);
-                return;
-            }
-            $tauxAnnuelInteret = (float) $tauxPret['taux_annuel'];
-
-            $tauxAssurance = SimulationModel::getTauxAssurance();
-            $tauxAnnuelAssurance = $tauxAssurance ? (float) $tauxAssurance['taux'] : 0;
-
-            $tauxMensuelInteret = ($tauxAnnuelInteret / 100) / 12;
-            $mensualiteHorsAssurance = 0;
-            if ($tauxMensuelInteret > 0) {
-                $mensualiteHorsAssurance = $montant * ($tauxMensuelInteret * pow(1 + $tauxMensuelInteret, $dureeMois)) / (pow(1 + $tauxMensuelInteret, $dureeMois) - 1);
-            } else {
-                $mensualiteHorsAssurance = $montant / $dureeMois;
-            }
-
-            $mensualiteAssurance = ($montant * ($tauxAnnuelAssurance / 100)) / 12;
-
-            $mensualiteTotale = $mensualiteHorsAssurance + $mensualiteAssurance;
-            $coutTotalCredit = $mensualiteTotale * $dureeMois - $montant;
-
-            $resultat = [
-                'montant_emprunte' => $montant,
-                'duree_mois' => $dureeMois,
-                'taux_interet_annuel' => $tauxAnnuelInteret,
-                'taux_assurance_annuel' => $tauxAnnuelAssurance,
-                'mensualite_hors_assurance' => round($mensualiteHorsAssurance, 2),
-                'mensualite_assurance' => round($mensualiteAssurance, 2),
-                'mensualite_totale' => round($mensualiteTotale, 2),
-                'cout_total_credit' => round($coutTotalCredit, 2)
-            ];
-
-            Flight::json($resultat);
+            $result = SimulationModel::calculerSimulation($id_taux_pret, $montant, $duree_mois, $include_assurance);
+            Flight::json($result);
         } catch (Exception $e) {
-            Flight::json(['error' => 'Erreur serveur lors du calcul.', 'details' => $e->getMessage()], 500);
+            $status = $e->getCode() ?: 500;
+            Flight::json(['error' => $e->getMessage()], $status);
         }
     }
+
     public static function getAllTypePret()
     {
-        Flight::json(AppModel::getAll("type_pret"));
+        try {
+            $result = SimulationModel::getAllTypePret();
+            Flight::json($result);
+        } catch (Exception $e) {
+            Flight::json(['error' => 'Erreur lors de la récupération des types de prêts : ' . $e->getMessage()], 500);
+        }
+    }
+
+    public static function getAllTauxPretById()
+    {
+        $id_type_pret = Flight::request()->query['id_type_pret'] ?? null;
+        try {
+            $result = SimulationModel::getAllTauxPretById($id_type_pret);
+            Flight::json($result);
+        } catch (Exception $e) {
+            Flight::json(['error' => 'Erreur lors de la récupération des taux : ' . $e->getMessage()], 500);
+        }
+    }
+
+    public static function validerPret()
+    {
+        $data = Flight::request()->data;
+        $id_taux_pret = $data['id_taux_pret'] ?? null;
+        $montant = $data['montant'] ?? 0;
+        $duree_mois = $data['duree_mois'] ?? 0;
+        $include_assurance = filter_var($data['include_assurance'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $id_type_ressource = $data['id_type_ressource'] ?? null;
+
+        error_log("validerPret - include_assurance: " . ($include_assurance ? 'true' : 'false')); // Débogage
+        error_log("validerPret - id_type_ressource: " . $id_type_ressource); // Débogage
+
+        try {
+            $result = SimulationModel::validerPret($id_taux_pret, $montant, $duree_mois, $include_assurance, $id_type_ressource);
+            Flight::json($result);
+        } catch (Exception $e) {
+            $status = $e->getCode() ?: 500;
+            Flight::json(['error' => $e->getMessage()], $status);
+        }
+    }
+
+    public static function exportSimulationPDF()
+    {
+        $data = Flight::request()->data;
+        $id_taux_pret = $data['id_taux_pret'] ?? null;
+        $montant = $data['montant'] ?? 0;
+        $duree_mois = $data['duree_mois'] ?? 0;
+        $include_assurance = filter_var($data['include_assurance'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $id_type_ressource = $data['id_type_ressource'] ?? null;
+        $year = date('Y');
+
+        error_log("exportSimulationPDF - include_assurance: " . ($include_assurance ? 'true' : 'false')); // Débogage
+        error_log("exportSimulationPDF - id_type_ressource: " . $id_type_ressource); // Débogage
+
+        try {
+            $simulationData = SimulationModel::calculerSimulation($id_taux_pret, $montant, $duree_mois, $include_assurance);
+
+            $db = getDB();
+            $stmt = $db->prepare('
+                SELECT tp.libelle
+                FROM type_pret tp
+                JOIN taux_pret tpr ON tp.id = tpr.id_type_pret
+                WHERE tpr.id = :id_taux_pret
+            ');
+            $stmt->execute(['id_taux_pret' => $id_taux_pret]);
+            $typePret = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$typePret) {
+                throw new Exception('Type de prêt non trouvé.', 400);
+            }
+
+            $stmt = $db->prepare('
+                SELECT taux_annuel, duree, borne_inf, borne_sup
+                FROM taux_pret
+                WHERE id = :id_taux_pret
+            ');
+            $stmt->execute(['id_taux_pret' => $id_taux_pret]);
+            $tauxPret = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$tauxPret) {
+                throw new Exception('Taux de prêt non trouvé.', 400);
+            }
+
+            $stmt = $db->prepare('
+                SELECT libelle
+                FROM type_ressource
+                WHERE id = :id_type_ressource
+            ');
+            $stmt->execute(['id_type_ressource' => $id_type_ressource]);
+            $typeRessource = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$typeRessource) {
+                throw new Exception('Type de ressource non trouvé.', 400);
+            }
+
+            $simulationData['montant'] = (float) $montant;
+
+            PDFModel::generateSimulationPDF($simulationData, $typePret, $tauxPret, $typeRessource, $year);
+        } catch (Exception $e) {
+            $status = $e->getCode() ?: 500;
+            Flight::json(['error' => $e->getMessage()], $status);
+        }
     }
 }

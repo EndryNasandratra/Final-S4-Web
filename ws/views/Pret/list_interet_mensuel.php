@@ -260,7 +260,6 @@
                 <script>
                 // Variables globales
                 let donneesBrutes = [];
-                let chart = null;
 
                 const moisMap = {
                     1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril', 5: 'Mai', 6: 'Juin',
@@ -280,7 +279,6 @@
                     tbody.innerHTML = '';
                     let start = moisAnneeToInt(moisDebut, anneeDebut);
                     let end = moisAnneeToInt(moisFin, anneeFin);
-                    // Regrouper les intérêts par mois/année
                     let interetsParMois = {};
                     donneesBrutes.forEach(d => {
                         let m = moisMapReverse[d.mois];
