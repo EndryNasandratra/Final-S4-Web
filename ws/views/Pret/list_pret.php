@@ -241,7 +241,7 @@
 
         // Fonction pour charger les données des prêts validés
         function loadValidatedPrets() {
-            fetch('http://localhost/Final-S4-Web/ws/prets/validated')
+            fetch('http://localhost/Final_S4_Web/ws/prets/validated')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Erreur réseau: ' + response.status);

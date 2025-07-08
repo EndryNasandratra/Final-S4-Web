@@ -15,7 +15,7 @@ class LoginController
         if ($result) {
             Flight::json([
                 'success' => true,
-                'redirect' => 'http://localhost/ITU/S4/Final-S4-Web/ws/views/Pret/list_pret.php'
+                'redirect' => 'http://localhost/ITU/S4/Final_S4_Web/ws/views/Pret/list_pret.php'
             ]);
         } else {
             Flight::json([

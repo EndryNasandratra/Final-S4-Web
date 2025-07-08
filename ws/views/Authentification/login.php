@@ -138,7 +138,7 @@
       const formData = new FormData(this);
       const errorMessage = document.getElementById('error-message');
 
-      fetch('http://localhost/ITU/S4/Final-S4-Web/ws/login', {
+      fetch('http://localhost/ITU/S4/Final_S4_Web/ws/login', {
           method: 'POST',
           body: formData
         })
