@@ -98,5 +98,16 @@ class PretController {
         }
     }
 
+    // Filtrer les prets valides selon les arguments GET
+    public static function filterValidated() {
+        $filters = [];
+        foreach (["client", "employe", "taux", "montant", "date", "duree"] as $key) {
+            if (!empty($_GET[$key])) {
+                $filters[$key] = $_GET[$key];
+            }
+        }
+        $prets = Pret::filterValidated($filters);
+        Flight::json($prets);
+    }
 }
 ?>

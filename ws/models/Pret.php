@@ -154,5 +154,56 @@ class Pret {
     public static function rejeterPret($pretId, $raison = '') {
         return self::updateStatut($pretId, 'Refuse');
     }
+
+    // Filtrer les prets valides selon les arguments fournis
+    public static function filterValidated($filters = []) {
+        $db = getDB();
+        $sql = "SELECT 
+                p.id,
+                c.nom as client_nom,
+                c.prenom as client_prenom,
+                e.nom as employe_nom,
+                e.prenom as employe_prenom,
+                tp.taux_annuel as taux,
+                p.montant_emprunte as montant,
+                p.date_pret as date_debut,
+                tp.duree,
+                tpret.libelle as type_pret
+            FROM pret p
+            LEFT JOIN clients c ON p.id_client = c.id
+            INNER JOIN employes e ON p.id_employe = e.id
+            INNER JOIN taux_pret tp ON p.id_taux_pret = tp.id
+            INNER JOIN type_pret tpret ON tp.id_type_pret = tpret.id
+            INNER JOIN statut_pret sp ON p.id = sp.id_pret
+            WHERE sp.libelle = 'Valide'";
+        $params = [];
+        if (!empty($filters['client'])) {
+            $sql .= " AND (c.nom LIKE :client OR c.prenom LIKE :client)";
+            $params[':client'] = '%' . $filters['client'] . '%';
+        }
+        if (!empty($filters['employe'])) {
+            $sql .= " AND (e.nom LIKE :employe OR e.prenom LIKE :employe)";
+            $params[':employe'] = '%' . $filters['employe'] . '%';
+        }
+        if (!empty($filters['taux'])) {
+            $sql .= " AND tp.taux_annuel = :taux";
+            $params[':taux'] = $filters['taux'];
+        }
+        if (!empty($filters['montant'])) {
+            $sql .= " AND p.montant_emprunte = :montant";
+            $params[':montant'] = $filters['montant'];
+        }
+        if (!empty($filters['date'])) {
+            $sql .= " AND DATE(p.date_pret) = :date";
+            $params[':date'] = $filters['date'];
+        }
+        if (!empty($filters['duree'])) {
+            $sql .= " AND tp.duree = :duree";
+            $params[':duree'] = $filters['duree'];
+        }
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
