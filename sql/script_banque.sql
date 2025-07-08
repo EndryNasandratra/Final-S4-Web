@@ -1,10 +1,8 @@
-
 DROP DATABASE IF EXISTS banque;
 
 CREATE DATABASE banque;
 
 USE banque;
-
 
 CREATE TABLE clients (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -23,7 +21,7 @@ CREATE TABLE ressources (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_type_resssource INT NOT NULL,
     valeur DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (id_type_resssource) REFERENCES type_ressource(id)
+    FOREIGN KEY (id_type_resssource) REFERENCES type_ressource (id)
 );
 
 CREATE TABLE historique_ressource (
@@ -32,7 +30,7 @@ CREATE TABLE historique_ressource (
     valeur INT NOT NULL,
     date_historique DATE NOT NULL,
     estEntree BOOLEAN NOT NULL,
-    FOREIGN KEY (id_ressource) REFERENCES ressources(id)
+    FOREIGN KEY (id_ressource) REFERENCES ressources (id)
 );
 
 CREATE TABLE type_pret (
@@ -49,7 +47,7 @@ CREATE TABLE taux_pret (
     duree INT NOT NULL,
     borne_inf DECIMAL(10, 2) NOT NULL,
     borne_sup DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (id_type_pret) REFERENCES type_pret(id)
+    FOREIGN KEY (id_type_pret) REFERENCES type_pret (id)
 );
 
 CREATE TABLE taux_assurance (
@@ -80,18 +78,18 @@ CREATE TABLE pret (
     id_taux_assurance INT NOT NULL,
     montant_emprunte DECIMAL(10, 2) NOT NULL,
     date_pret DATE NOT NULL,
-    FOREIGN KEY (id_client) REFERENCES clients(id),
-    FOREIGN KEY (id_employe) REFERENCES employes(id),
-    FOREIGN KEY (id_taux_pret) REFERENCES taux_pret(id),
-    FOREIGN KEY (id_remboursement) REFERENCES mode_remboursement(id),
-    FOREIGN KEY (id_taux_assurance) REFERENCES taux_assurance(id)
+    FOREIGN KEY (id_client) REFERENCES clients (id),
+    FOREIGN KEY (id_employe) REFERENCES employes (id),
+    FOREIGN KEY (id_remboursement) REFERENCES mode_remboursement (id),
+    FOREIGN KEY (id_taux_pret) REFERENCES taux_pret (id),
+    FOREIGN KEY (id_taux_assurance) REFERENCES taux_assurance (id)
 );
 
 CREATE TABLE statut_pret (
     id INT AUTO_INCREMENT PRIMARY KEY,
     libelle VARCHAR(255) NOT NULL,
     id_pret INT NOT NULL,
-    FOREIGN KEY (id_pret) REFERENCES pret(id)
+    FOREIGN KEY (id_pret) REFERENCES pret (id)
 );
 
 CREATE TABLE remboursement (
@@ -99,5 +97,14 @@ CREATE TABLE remboursement (
     id_pret INT NOT NULL,
     montant_retour DECIMAL(10, 2) NOT NULL,
     date_retour DATE NOT NULL,
-    FOREIGN KEY (id_pret) REFERENCES pret(id)
+    FOREIGN KEY (id_pret) REFERENCES pret (id)
+);
+
+CREATE TABLE simulation (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_taux_pret INT NOT NULL,
+    id_taux_assurance INT NOT NULL,
+    montant_emprunte DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (id_taux_pret) REFERENCES taux_pret (id),
+    FOREIGN KEY (id_taux_assurance) REFERENCES taux_assurance (id)
 );

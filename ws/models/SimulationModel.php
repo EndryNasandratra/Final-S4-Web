@@ -80,7 +80,7 @@ class SimulationModel
         }
     }
 
-    public static function validerPret($id_taux_pret, $montant, $duree_mois, $include_assurance,$id_client,$id_admin = 1)
+    public static function validerPret($id_taux_pret, $montant, $duree_mois, $include_assurance, $id_client, $id_admin = 1)
     {
         if (!$id_taux_pret || $montant <= 0 || $duree_mois <= 0) {
             throw new Exception('Donnees invalides fournies.', 400);
@@ -172,12 +172,12 @@ class SimulationModel
                 'id_taux_assurance' => $id_taux_assurance,
                 'montant_emprunte' => $montant
             ]);
-
+                        
             $pret_id = $db->lastInsertId();
 
             $stmt = $db->prepare("INSERT INTO statut_pret (libelle, id_pret) VALUES (?, ?)");
             $stmt->execute(['Valide', $pret_id]);
-            
+
             // Valider la transaction
             $db->commit();
 
@@ -218,4 +218,26 @@ class SimulationModel
         }
         return $taux;
     }
+    public static function  getAllSimulations()
+    {
+        try {
+            $db = getDB();
+            $stmt = $db->query('
+               SELECT 
+                   s.id,
+                   s.montant_emprunte,
+                   tp.taux_annuel AS taux_pret,
+                   tp.duree,
+                   ta.taux AS taux_assurance
+               FROM simulation s
+               JOIN taux_pret tp ON s.id_taux_pret = tp.id
+               LEFT JOIN taux_assurance ta ON s.id_taux_assurance = ta.id
+           ');
+            $simulations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $simulations;
+        } catch (PDOException $e) {
+            throw new Exception('Erreur lors de la recuperation des simulations : ' . $e->getMessage(), 500);
+        }
+    }
+
 }
