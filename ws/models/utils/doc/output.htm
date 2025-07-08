@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Output</title>
+<link type="text/css" rel="stylesheet" href="../fpdf.css">
+</head>
+<body>
+<h1>Output</h1>
+<code><b>string</b> Output([<b>string</b> dest [, <b>string</b> name [, <b>boolean</b> isUTF8]]])</code>
+<h2>Description</h2>
+Envoie le document vers une destination donnee : navigateur, fichier ou chaîne de caracteres.
+Dans le cas du navigateur, on peut utiliser le visualiseur PDF ou bien forcer le telechargement.
+<br>
+La methode commence par appeler Close() si necessaire pour terminer le document.
+<h2>Parametres</h2>
+<dl class="param">
+<dt><code>dest</code></dt>
+<dd>
+Destination où envoyer le document. Le parametre peut prendre les valeurs suivantes :
+<ul>
+<li><code>I</code> : envoyer en inline au navigateur. Le visualiseur PDF est utilise.</li>
+<li><code>D</code> : envoyer au navigateur en forçant le telechargement, avec le nom indique dans <code>name</code>.</li>
+<li><code>F</code> : sauver dans un fichier local, avec le nom indique dans <code>name</code>
+(peut inclure un repertoire).</li>
+<li><code>S</code> : renvoyer le document sous forme de chaîne.</li>
+</ul>
+La valeur par defaut est <code>I</code>.
+</dd>
+<dt><code>name</code></dt>
+<dd>
+Le nom du fichier. Il est ignore dans le cas de la destination <code>S</code>.<br>
+La valeur par defaut est <code>doc.pdf</code>.
+</dd>
+<dt><code>isUTF8</code></dt>
+<dd>
+Indique si <code>name</code> est encode en ISO-8859-1 (<code>false</code>) ou en UTF-8 (<code>true</code>).<br>
+Ce parametre est utilise uniquement pour les destinations <code>I</code> et <code>D</code>.<br>
+La valeur par defaut est <code>false</code>.
+</dd>
+</dl>
+<h2>Exemple</h2>
+Enregistrement du document dans un repertoire local :
+<div class="doc-source">
+<pre><code>$pdf-&gt;Output('F', 'reports/report.pdf');</code></pre>
+</div>
+Pour forcer un telechargement :
+<div class="doc-source">
+<pre><code>$pdf-&gt;Output('D', 'report.pdf');</code></pre>
+</div>
+<h2>Voir</h2>
+<a href="close.htm">Close</a>
+<hr style="margin-top:1.5em">
+<div style="text-align:center"><a href="index.htm">Index</a></div>
+</body>
+</html>

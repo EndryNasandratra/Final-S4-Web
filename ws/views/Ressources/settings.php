@@ -198,19 +198,20 @@
             <a href="settings.php">Parametres</a>
             <a href="../pret/validation_pret.php">Validation pret</a>
             <a href="../pret/list_interet_mensuel.php">Interet mensuel</a>
-            <a href="../pret/ajout_pret.php">Ajout de prêt</a>
-            <a href="#">Déconnexion</a>
+            <a href="../pret/ajout_pret.php">Ajout de pret</a>
+            <a href="../pret/simulateur_pret.php">Simulateur de pret</a>
+            <a href="#">Deconnexion</a>
         </nav>
         <main class="main-content">
-            <h1 class="main-title">Paramètres</h1>
+            <h1 class="main-title">Parametres</h1>
             
             <div class="content-grid">
                 <div class="left-column">
                     <div class="container">
                         <h2>Ajouter un type de ressource</h2>
                         <form id="addTypeRessourceForm">
-                            <label for="libelle">Libellé du type :</label>
-                            <input type="text" id="libelle" name="libelle" placeholder="Ex: Liquidités, Immobilisations..." required>
+                            <label for="libelle">Libelle du type :</label>
+                            <input type="text" id="libelle" name="libelle" placeholder="Ex: Liquidites, Immobilisations..." required>
                             <button type="submit">Ajouter le type</button>
                         </form>
                     </div>
@@ -220,21 +221,49 @@
                         <form id="addRessourceForm">
                             <label for="type">Type de ressource :</label>
                             <select id="type" name="type" required>
-                                <option value="">-- Sélectionner --</option>
+                                <option value="">-- Selectionner --</option>
                             </select>
                             <label for="valeur">Valeur :</label>
                             <input type="number" step="0.01" id="valeur" name="valeur" placeholder="0.00" required>
                             <button type="submit">Ajouter la ressource</button>
                         </form>
                     </div>
+                    <div class="container">
+                        <h2>Ajouter une type pret</h2>
+                        <form id="addTypePret">
+                            <label for="libelle">Libelle :</label>
+                            <input type="text" placeholder="Ex : Pret scolaire" id="libelle_type_pret" required>
+                            <label for="duree_max">Duree max :</label>
+                            <input type="number" id="duree_max" name="duree_max" placeholder="0" required>
+                            <label for="montant_max">Montant max :</label>
+                            <input type="number" step="0.01" id="montant_max" name="montant_max" placeholder="0.00" required>
+                            <button type="submit">Ajouter le type pret</button>
+                        </form>
+                    </div>
                 </div>
                 
                 <div class="right-column">
                     <div class="container">
-                        <h2>Statistiques</h2>
+                        <h2>Ajouter une taux pret</h2>
+                        <form id="addTauxPret">
+                            <label for="type_pret">type_pret :</label>
+                            <select name="type_pret" id="id_type_pret">
+                                <option value="">-- Selectionner --</option>
+                            </select>
+                            <label for="taux_annuel">Taux annuel :</label>
+                            <input type="number" placeholder="0.00" id="taux_annuel" required>
+                            <label for="duree">Duree :</label>
+                            <input type="number" id="duree" name="duree" placeholder="0" required>
+                            <label for="borne_inf">Borne inf :</label>
+                            <input type="number" step="0.01" id="borne_inf" name="borne_inf" placeholder="0.00" required>
+                            <label for="borne_sup">Borne sup :</label>
+                            <input type="number" step="0.01" id="borne_sup" name="borne_sup" placeholder="0.00" required>
+                            <button type="submit">Ajouter le taux pret</button>
+                        </form>
+                        <!-- <h2>Statistiques</h2>
                         <div id="statistics">
                             <p>Chargement des statistiques...</p>
-                        </div>
+                        </div> -->
                     </div>
                     
                     <div class="container">
@@ -253,16 +282,38 @@
         // Variables globales
         let typesRessource = [];
         let ressources = [];
+        const typePretSelect = document.getElementById('id_type_pret');
 
         // Charger les types de ressources
+        async function loadTypePret() {
+            try {
+                const response = await fetch('http://localhost/Final_S4_Web/ws/type_pret');
+                if (response.ok) {
+                    const types = await response.json();
+                    typePretSelect.innerHTML = '<option value="">Selectionnez un type de pret</option>';
+                    types.forEach(type => {
+                        const option = document.createElement('option');
+                        option.value = type.id;
+                        option.textContent = type.libelle;
+                        typePretSelect.appendChild(option);
+                    });
+                } else {
+                    displayError("Erreur lors du chargement des types de prets.");
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                displayError("Erreur lors du chargement des types de prets.");
+            }
+        }
+
         async function loadTypesRessource() {
             try {
-                const response = await fetch('http://localhost/Final-S4-Web/ws/types-ressource');
+                const response = await fetch('http://localhost/Final_S4_Web/ws/types-ressource');
                 const data = await response.json();
                 
                 typesRessource = data;
                 const select = document.getElementById('type');
-                select.innerHTML = '<option value="">-- Sélectionner --</option>';
+                select.innerHTML = '<option value="">-- Selectionner --</option>';
                 
                 typesRessource.forEach(type => {
                     const option = document.createElement('option');
@@ -278,13 +329,13 @@
         // Charger les ressources
         async function loadRessources() {
             try {
-                const response = await fetch('http://localhost/Final-S4-Web/ws/ressources');
+                const response = await fetch('http://localhost/Final_S4_Web/ws/ressources');
                 const data = await response.json();
                 
                 ressources = data;
                 displayRessources(ressources);
             } catch (error) {
-                console.error('Erreur réseau:', error);
+                console.error('Erreur reseau:', error);
                 document.getElementById('ressourcesList').innerHTML = 
                     '<p style="color: red;">Erreur de connexion</p>';
             }
@@ -295,7 +346,7 @@
             const container = document.getElementById('ressourcesList');
             
             if (ressources.length === 0) {
-                container.innerHTML = '<p>Aucune ressource trouvée</p>';
+                container.innerHTML = '<p>Aucune ressource trouvee</p>';
                 return;
             }
 
@@ -324,7 +375,7 @@
         // Charger les statistiques
         async function loadStatistics() {
             try {
-                const response = await fetch('http://localhost/Final-S4-Web/ws/ressources/total');
+                const response = await fetch('http://localhost/Final_S4_Web/ws/ressources/total');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -351,19 +402,19 @@
             }).format(amount || 0);
         }
 
-        // Gérer l'ajout d'un type de ressource
+        // Gerer l'ajout d'un type de ressource
         document.getElementById('addTypeRessourceForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const libelle = document.getElementById('libelle').value.trim();
 
             if (!libelle) {
-                alert('Veuillez saisir un libellé');
+                alert('Veuillez saisir un libelle');
                 return;
             }
 
             try {
-                const response = await fetch('http://localhost/Final-S4-Web/ws/types-ressource', {
+                const response = await fetch('http://localhost/Final_S4_Web/ws/types-ressource', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -374,7 +425,7 @@
                 const result = await response.json();
                 
                 if (response.ok && result.success) {
-                    alert('Type de ressource ajouté avec succès !');
+                    alert('Type de ressource ajoute avec succes !');
                     document.getElementById('libelle').value = '';
                     // Recharger les types de ressources
                     loadTypesRessource();
@@ -387,7 +438,7 @@
             }
         });
 
-        // Gérer l'ajout d'une ressource
+        // Gerer l'ajout d'une ressource
         document.getElementById('addRessourceForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -400,7 +451,7 @@
             }
 
             try {
-                const response = await fetch('http://localhost/Final-S4-Web/ws/ressources', {
+                const response = await fetch('http://localhost/Final_S4_Web/ws/ressources', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -414,7 +465,7 @@
                 const result = await response.json();
                 
                 if (response.ok && result.success) {
-                    alert('Ressource ajoutée avec succès !');
+                    alert('Ressource ajoutee avec succes !');
                     document.getElementById('type').value = '';
                     document.getElementById('valeur').value = '';
                     // Recharger les ressources et statistiques
@@ -429,15 +480,98 @@
             }
         });
 
-        // Fonctions d'action (à implémenter)
+        document.getElementById('addTypePret').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const libelle = document.getElementById('libelle_type_pret').value;
+            const duree_max = parseFloat(document.getElementById('duree_max').value);
+            const montant_max = parseFloat(document.getElementById('montant_max').value);
+
+            try {
+                const response = await fetch('http://localhost/Final_S4_Web/ws/addType_pret', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        libelle: libelle,
+                        duree_max: duree_max ,
+                        montant_max: montant_max 
+                    })
+                });
+
+                const result = await response.json();
+                if (response.ok && result.status) {
+                    alert('Type pret ajoutee avec succes !');
+                    document.getElementById('libelle').value = '';
+                    document.getElementById('duree_max').value = '';
+                    document.getElementById('montant_max').value = '';
+                    // Recharger les ressources et statistiques
+                    loadTypePret();
+                    // loadStatistics();
+                } else {
+                    alert('Erreur lors de l\'ajout: ' + (result.error || 'Erreur inconnue'));
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de l\'ajout de la ressource');
+            }
+        });
+
+        document.getElementById('addTauxPret').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id_type_pret = document.getElementById('id_type_pret').value;
+            const taux_annuel = parseFloat(document.getElementById('taux_annuel').value);
+            const duree = parseFloat(document.getElementById('duree').value);
+            const borne_inf = parseFloat(document.getElementById('borne_inf').value);
+            const borne_sup = parseFloat(document.getElementById('borne_sup').value);
+
+            try {
+                const response = await fetch('http://localhost/Final_S4_Web/ws/addTaux_pret', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        id_type_pret: id_type_pret,
+                        taux_annuel: taux_annuel ,
+                        duree: duree ,
+                        borne_inf: borne_inf, 
+                        borne_sup: borne_sup 
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok && result.status) {
+                    alert('Taux pret ajoutee avec succes !');
+                    document.getElementById('id_type_pret').value = '';
+                    document.getElementById('taux_annuel').value = '';
+                    document.getElementById('duree').value = '';
+                    document.getElementById('borne_inf').value = '';
+                    document.getElementById('borne_sup').value = '';
+                    // Recharger les ressources et statistiques
+                    loadTypePret();
+                    // loadStatistics();
+                } else {
+                    alert('Erreur lors de l\'ajout: ' + (result.error || 'Erreur inconnue'));
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de l\'ajout de la ressource');
+            }
+        });
+
+        // Fonctions d'action (a implementer)
         function editRessource(id) {
-            alert('Fonctionnalité de modification à implémenter pour la ressource ' + id);
+            alert('Fonctionnalite de modification a implementer pour la ressource ' + id);
         }
 
         function deleteRessource(id) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette ressource ?')) {
-                alert('Fonctionnalité de suppression à implémenter pour la ressource ' + id);
-                // Recharger les ressources après suppression
+            if (confirm('etes-vous sûr de vouloir supprimer cette ressource ?')) {
+                alert('Fonctionnalite de suppression a implementer pour la ressource ' + id);
+                // Recharger les ressources apres suppression
                 // loadRessources();
             }
         }
@@ -447,6 +581,7 @@
             loadTypesRessource();
             loadRessources();
             loadStatistics();
+            loadTypePret();
         });
     </script>
 </body>

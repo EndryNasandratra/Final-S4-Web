@@ -2,8 +2,10 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Liste des intérêts mensuels</title>
+    <title>Rapport Dynamique des Interets Gagnes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             margin: 0;
@@ -53,66 +55,82 @@
         .main-content {
             flex: 1;
             display: flex;
-            align-items: flex-start;
-            justify-content: center;
+            flex-direction: column;
             background: #f8fafc;
             box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-            padding: 2rem 0;
+            padding: 2rem;
+            gap: 2rem;
         }
-        .container {
-            background: #fff;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            padding: 2rem 1.5rem;
-            min-width: 95%;
-            box-sizing: border-box;
-        }
-        h2 {
+        .main-title {
             color: #2563eb;
-            margin-bottom: 1.2rem;
-            font-size: 1.2rem;
-        }
-        .filter-toggle-btn {
-            background: #2563eb;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
             margin-bottom: 1rem;
+            font-size: 1.5rem;
+            text-align: center;
         }
-        .filter-toggle-btn:hover {
-            background: #1d4ed8;
+        .report-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
         }
-        .filters-block {
-            display: none;
-            margin-bottom: 1rem;
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: flex-end;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
             background: #f8fafc;
-            padding: 1rem;
             border-radius: 8px;
             border: 1px solid #cbd5e1;
         }
-        .filters-block.visible {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            align-items: flex-end;
-        }
-        .filters-block input, .filters-block select {
-            padding: 0.3rem 0.7rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-        .filters-block label {
-            font-size: 0.95rem;
-            color: #1e293b;
-            margin-bottom: 0.2rem;
-            display: block;
-        }
-        .filters-block .filter-group {
+        .filter-group {
             display: flex;
             flex-direction: column;
+        }
+        .filter-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+        }
+        .filter-group select,
+        .filter-group input {
+            padding: 0.8rem;
+            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+            font-size: 1rem;
+        }
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .filters button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            background: #2563eb;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            height: fit-content;
+        }
+        .filters button:hover {
+            background: #1d4ed8;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            margin-bottom: 2rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #cbd5e1;
         }
         table {
             width: 100%;
@@ -121,36 +139,41 @@
         }
         th, td {
             border: 1px solid #cbd5e1;
-            padding: 0.7rem;
+            padding: 1rem;
             text-align: left;
         }
         th {
             background: #e0e7ff;
             color: #2563eb;
+            font-weight: 600;
         }
         tr:nth-child(even) {
-            background: #f1f5f9;
-        }
-        .chart-container {
-            margin-top: 2rem;
             background: #f8fafc;
-            border-radius: 8px;
-            padding: 1.5rem 1rem;
-            border: 1px solid #cbd5e1;
-            max-width: 900px;
         }
-        button {
-            background: #2563eb;
-            color: #fff;
-            border: none;
+        tfoot {
+            font-weight: bold;
+        }
+        .total-row td {
+            background: #e0e7ff;
+            text-align: right;
+            font-weight: bold;
+        }
+        .total-row td:first-child {
+            text-align: left;
+        }
+        .loading-message,
+        .error-message {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 2rem;
+        }
+        .error-message {
+            color: #dc2626;
+            background: #fee2e2;
             border-radius: 4px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
         }
-        button:hover {
-            background: #1d4ed8;
-        }
-        @media (max-width: 900px) {
+        @media (max-width: 768px) {
             .layout {
                 flex-direction: column;
             }
@@ -163,23 +186,24 @@
                 justify-content: center;
             }
             .main-content {
-                padding: 1rem 0;
+                padding: 1rem;
             }
-            .container {
-                min-width: 99vw;
-            }
-            .filters-block.visible {
+            .filters {
                 flex-direction: column;
-                gap: 0.5rem;
+                gap: 1rem;
+            }
+            .chart-container {
+                height: 300px;
             }
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="header"><div class="logo">MNA_Banque</div> - Gestion des ressources</div>
+    <div class="header">
+        <div class="logo">MNA_Banque</div> - Rapport des Interets Gagnes
+    </div>
     <div class="layout">
-    <nav class="sidebar">
+        <nav class="sidebar">
             <a href="list_pret.php">Accueil</a>
             <a href="../Ressources/settings.php">Parametres</a>
             <a href="validation_pret.php">Validation pret</a>
@@ -188,219 +212,206 @@
             <a href="#">Déconnexion</a>
         </nav>
         <main class="main-content">
-            <div class="container">
-                <h2>Liste des intérêts mensuels</h2>
-                <button type="button" class="filter-toggle-btn" onclick="toggleFilters()">Afficher les filtres</button>
-                <form id="filterForm" method="get" onsubmit="return handleFilter(event)">
-                    <div class="filters-block" id="filtersBlock">
-                        <div class="filter-group">
-                            <label for="mois_debut">Mois début</label>
-                            <select name="mois_debut" id="mois_debut">
-                                <option value="">--</option>
-                                <option value="1">Janvier</option>
-                                <option value="2">Février</option>
-                                <option value="3">Mars</option>
-                                <option value="4">Avril</option>
-                                <option value="5">Mai</option>
-                                <option value="6">Juin</option>
-                                <option value="7">Juillet</option>
-                                <option value="8">Août</option>
-                                <option value="9">Septembre</option>
-                                <option value="10">Octobre</option>
-                                <option value="11">Novembre</option>
-                                <option value="12">Décembre</option>
+            <h1 class="main-title">Rapport des Interets Gagnes par Mois</h1>
+            
+            <div class="report-container">
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="start-month">Date de debut</label>
+                        <div style="display:flex; gap: 5px;">
+                            <select id="start-month">
+                                <?php for ($m = 1; $m <= 12; $m++) echo "<option value='$m'>" . date('F', mktime(0, 0, 0, $m, 10)) . "</option>"; ?>
                             </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="annee_debut">Année début</label>
-                            <input type="text" name="annee_debut" id="annee_debut" placeholder="Année début" value="">
-                        </div>
-                        <div class="filter-group">
-                            <label for="mois_fin">Mois fin</label>
-                            <select name="mois_fin" id="mois_fin">
-                                <option value="">--</option>
-                                <option value="1">Janvier</option>
-                                <option value="2">Février</option>
-                                <option value="3">Mars</option>
-                                <option value="4">Avril</option>
-                                <option value="5">Mai</option>
-                                <option value="6">Juin</option>
-                                <option value="7">Juillet</option>
-                                <option value="8">Août</option>
-                                <option value="9">Septembre</option>
-                                <option value="10">Octobre</option>
-                                <option value="11">Novembre</option>
-                                <option value="12">Décembre</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="annee_fin">Année fin</label>
-                            <input type="text" name="annee_fin" id="annee_fin" placeholder="Année fin" value="">
-                        </div>
-                        <div class="filter-group">
-                            <button type="submit">Filtrer</button>
+                            <input type="number" id="start-year" value="<?= date('Y') - 1 ?>" style="width: 80px;">
                         </div>
                     </div>
-                    <table id="interetTable">
-                        <thead>
+                    <div class="filter-group">
+                        <label for="end-month">Date de fin</label>
+                        <div style="display:flex; gap: 5px;">
+                            <select id="end-month">
+                                <?php for ($m = 1; $m <= 12; $m++) echo "<option value='$m' " . ($m == date('n') ? 'selected' : '') . ">" . date('F', mktime(0, 0, 0, $m, 10)) . "</option>"; ?>
+                            </select>
+                            <input type="number" id="end-year" value="<?= date('Y') ?>" style="width: 80px;">
+                        </div>
+                    </div>
+                    <button id="filter-button">Filtrer</button>
+                </div>
+
+                <div class="chart-container" id="chart-wrapper">
+                    <canvas id="interest-chart"></canvas>
+                </div>
+
+                <table>
+                    <thead>
                         <tr>
                             <th>Mois</th>
-                            <th>Année</th>
-                            <th>Somme des intérêts mensuels</th>
+                            <th>Interets Totaux Gagnes</th>
                         </tr>
-                        </thead>
-                        <tbody id="tableBody">
-                        <!-- Généré dynamiquement -->
-                        </tbody>
-                    </table>
-                    <div class="chart-container">
-                        <canvas id="interetChart"></canvas>
-                    </div>
-                </form>
-                <script>
-                // Variables globales
-                let donneesBrutes = [];
-                let chart = null;
-
-                const moisMap = {
-                    1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril', 5: 'Mai', 6: 'Juin',
-                    7: 'Juillet', 8: 'Août', 9: 'Septembre', 10: 'Octobre', 11: 'Novembre', 12: 'Décembre'
-                };
-                const moisMapReverse = Object.fromEntries(Object.entries(moisMap).map(([k, v]) => [v, parseInt(k)]));
-
-                function moisAnneeToInt(mois, annee) {
-                    if (!mois || !annee) return null;
-                    return parseInt(annee) * 100 + parseInt(mois);
-                }
-
-                let chart = null;
-
-                function afficherTableau(moisDebut, anneeDebut, moisFin, anneeFin) {
-                    const tbody = document.getElementById('tableBody');
-                    tbody.innerHTML = '';
-                    let start = moisAnneeToInt(moisDebut, anneeDebut);
-                    let end = moisAnneeToInt(moisFin, anneeFin);
-                    // Regrouper les intérêts par mois/année
-                    let interetsParMois = {};
-                    donneesBrutes.forEach(d => {
-                        let m = moisMapReverse[d.mois];
-                        let a = d.annee;
-                        let key = `${a}-${m}`;
-                        let val = moisAnneeToInt(m, a);
-                        if (( !start && !end ) || ( (!start || val >= start ) && ( !end || val <= end ))) {
-                            if (!interetsParMois[key]) interetsParMois[key] = { mois: m, annee: a, somme: 0 };
-                            interetsParMois[key].somme += d.interet;
-                        }
-                    });
-                    // Trier par année/mois croissant
-                    let lignes = Object.values(interetsParMois).sort((a, b) => moisAnneeToInt(a.mois, a.annee) - moisAnneeToInt(b.mois, b.annee));
-                    // Affichage tableau
-                    lignes.forEach(l => {
-                        let tr = document.createElement('tr');
-                        tr.innerHTML = `<td>${moisMap[l.mois]}</td><td>${l.annee}</td><td>${l.somme.toFixed(2)} €</td>`;
-                        tbody.appendChild(tr);
-                    });
-                    // Affichage graphe
-                    afficherGraphe(lignes);
-                }
-
-                function afficherGraphe(lignes) {
-                    const ctx = document.getElementById('interetChart').getContext('2d');
-                    const labels = lignes.map(l => `${moisMap[l.mois]} ${l.annee}`);
-                    const data = lignes.map(l => l.somme.toFixed(2));
-                    if (chart) chart.destroy();
-                    chart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Somme des intérêts mensuels (€)',
-                                data: data,
-                                backgroundColor: '#2563eb',
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: { display: false },
-                                title: { display: false }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: { color: '#1e293b' }
-                                },
-                                x: {
-                                    ticks: { color: '#1e293b' }
-                                }
-                            }
-                        }
-                    });
-                }
-
-                function handleFilter(event) {
-                    event.preventDefault();
-                    let moisDebut = document.getElementById('mois_debut').value;
-                    let anneeDebut = document.getElementById('annee_debut').value;
-                    let moisFin = document.getElementById('mois_fin').value;
-                    let anneeFin = document.getElementById('annee_fin').value;
-                    afficherTableau(moisDebut, anneeDebut, moisFin, anneeFin);
-                    return false;
-                }
-
-                // Charger les données depuis l'API
-                async function loadInteretsData() {
-                    try {
-                        const response = await fetch('/ws/api/prets');
-                        const data = await response.json();
-                        
-                        if (data.success) {
-                            // Transformer les données des prêts en données d'intérêts
-                            donneesBrutes = data.data.map(pret => {
-                                const datePret = new Date(pret.date_pret);
-                                const mois = datePret.getMonth() + 1; // getMonth() retourne 0-11
-                                const annee = datePret.getFullYear();
-                                
-                                // Calculer l'intérêt mensuel basé sur le taux et le montant
-                                const tauxMensuel = (pret.taux_annuel || 0) / 100 / 12;
-                                const interetMensuel = (pret.montant_emprunte || 0) * tauxMensuel;
-                                
-                                return {
-                                    client: `${pret.client_nom || 'N/A'} ${pret.client_prenom || ''}`,
-                                    pret: `Prêt #${pret.id}`,
-                                    mois: moisMap[mois],
-                                    annee: annee,
-                                    interet: interetMensuel
-                                };
-                            });
-                            
-                            // Affichage initial
-                            afficherTableau('', '', '', '');
-                        } else {
-                            console.error('Erreur:', data.message);
-                            document.getElementById('tableBody').innerHTML = 
-                                '<tr><td colspan="3" style="text-align: center; color: red;">Erreur lors du chargement des données</td></tr>';
-                        }
-                    } catch (error) {
-                        console.error('Erreur réseau:', error);
-                        document.getElementById('tableBody').innerHTML = 
-                            '<tr><td colspan="3" style="text-align: center; color: red;">Erreur de connexion</td></tr>';
-                    }
-                }
-
-                // Initialisation au chargement de la page
-                document.addEventListener('DOMContentLoaded', function() {
-                    loadInteretsData();
-                });
-                </script>
+                    </thead>
+                    <tbody id="report-body">
+                        <tr>
+                            <td colspan="2" class="loading-message">Chargement...</td>
+                        </tr>
+                    </tbody>
+                    <tfoot id="report-foot"></tfoot>
+                </table>
             </div>
         </main>
     </div>
+
     <script>
-        function toggleFilters() {
-            var filtersBlock = document.getElementById('filtersBlock');
-            filtersBlock.classList.toggle('visible');
+        const apiBase = "http://localhost/Final_S4_Web/ws";
+        const urlGetAllData = `${apiBase}/interets_mensuels`;
+        const urlGetFilteredData = `${apiBase}/filtrer_interets_mensuels`;
+
+        const startMonthEl = document.getElementById('start-month');
+        const startYearEl = document.getElementById('start-year');
+        const endMonthEl = document.getElementById('end-month');
+        const endYearEl = document.getElementById('end-year');
+        const filterButton = document.getElementById('filter-button');
+        const reportBody = document.getElementById('report-body');
+        const reportFoot = document.getElementById('report-foot');
+        const chartWrapper = document.getElementById('chart-wrapper');
+
+        let myChart = null;
+
+        function showLoading() {
+            reportBody.innerHTML = `<tr><td colspan="2" class="loading-message">Chargement des donnees...</td></tr>`;
+            reportFoot.innerHTML = '';
+            chartWrapper.style.display = 'none';
         }
+
+        async function fetchInitialData() {
+            showLoading();
+            try {
+                const response = await fetch(urlGetAllData);
+                if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
+                const data = await response.json();
+                displayReport(data);
+            } catch (error) {
+                console.error('Erreur:', error);
+                reportBody.innerHTML = `<tr><td colspan="2" class="error-message">Impossible de charger le rapport.</td></tr>`;
+            }
+        }
+
+        async function fetchFilteredData() {
+            showLoading();
+            try {
+                const params = new URLSearchParams({
+                    start_year: startYearEl.value,
+                    start_month: startMonthEl.value,
+                    end_year: endYearEl.value,
+                    end_month: endMonthEl.value
+                });
+                const finalUrl = `${urlGetFilteredData}?${params.toString()}`;
+                const response = await fetch(finalUrl);
+                if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
+                const data = await response.json();
+                displayReport(data);
+            } catch (error) {
+                console.error('Erreur:', error);
+                reportBody.innerHTML = `<tr><td colspan="2" class="error-message">Impossible de charger le rapport filtre.</td></tr>`;
+            }
+        }
+
+        function displayReport(data) {
+            reportBody.innerHTML = '';
+            reportFoot.innerHTML = '';
+
+            if (Object.keys(data).length === 0) {
+                reportBody.innerHTML = `<tr><td colspan="2" class="loading-message">Aucune donnee a afficher pour la periode selectionnee.</td></tr>`;
+                chartWrapper.style.display = 'none';
+                return;
+            }
+            chartWrapper.style.display = 'block';
+
+            let totalGeneral = 0;
+            const monthFormatter = new Intl.DateTimeFormat('fr-FR', {
+                year: 'numeric',
+                month: 'long'
+            });
+            const currencyFormatter = new Intl.NumberFormat('fr-FR', {
+                style: 'currency',
+                currency: 'EUR'
+            });
+
+            // Preparer les donnees pour le graphique
+            const chartLabels = [];
+            const chartDataPoints = [];
+
+            for (const monthKey in data) {
+                const totalInterets = data[monthKey];
+                totalGeneral += totalInterets;
+                const tr = document.createElement('tr');
+                const date = new Date(monthKey + '-02');
+                const formattedMonth = monthFormatter.format(date);
+                tr.innerHTML = `<td>${formattedMonth.charAt(0).toUpperCase() + formattedMonth.slice(1)}</td><td style="text-align:right;">${currencyFormatter.format(totalInterets)}</td>`;
+                reportBody.appendChild(tr);
+
+                // Pour le graphique
+                chartLabels.push(formattedMonth.charAt(0).toUpperCase() + formattedMonth.slice(1));
+                chartDataPoints.push(totalInterets);
+            }
+
+            const totalRow = document.createElement('tr');
+            totalRow.className = 'total-row';
+            totalRow.innerHTML = `<td>Total General</td><td>${currencyFormatter.format(totalGeneral)}</td>`;
+            reportFoot.appendChild(totalRow);
+
+            // Detruire l'ancien graphique s'il existe
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            const ctx = document.getElementById('interest-chart').getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'Interets Gagnes',
+                        data: chartDataPoints,
+                        backgroundColor: 'rgba(37, 99, 235, 0.6)',
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return currencyFormatter.format(value);
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += currencyFormatter.format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Attacher les ecouteurs d'evenements
+        document.addEventListener('DOMContentLoaded', fetchInitialData);
+        filterButton.addEventListener('click', fetchFilteredData);
     </script>
 </body>
 </html>

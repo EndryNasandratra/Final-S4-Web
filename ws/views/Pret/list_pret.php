@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Liste des prêts</title>
+    <title>Liste des prets</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -184,7 +184,7 @@
 <body>
 <div class="header"><div class="logo">MNA_Banque</div> - Gestion des ressources</div>
 <div class="layout">
-     <nav class="sidebar">
+             <nav class="sidebar">
             <a href="list_pret.php">Accueil</a>
             <a href="../Ressources/settings.php">Parametres</a>
             <a href="validation_pret.php">Validation pret</a>
@@ -203,8 +203,8 @@
                             <input type="text" name="client" id="client" placeholder="Client" value="">
                         </div>
                         <div class="filter-group">
-                            <label for="employe">Employé</label>
-                            <input type="text" name="employe" id="employe" placeholder="Employé" value="">
+                            <label for="employe">Employe</label>
+                            <input type="text" name="employe" id="employe" placeholder="Employe" value="">
                         </div>
                         <div class="filter-group">
                             <label for="taux">Taux</label>
@@ -219,8 +219,8 @@
                             <input type="date" name="date" id="date" value="">
                         </div>
                         <div class="filter-group">
-                            <label for="duree">Durée</label>
-                            <input type="text" name="duree" id="duree" placeholder="Durée" value="">
+                            <label for="duree">Duree</label>
+                            <input type="text" name="duree" id="duree" placeholder="Duree" value="">
                         </div>
                         <div class="filter-group">
                             <button type="submit">Filtrer</button>

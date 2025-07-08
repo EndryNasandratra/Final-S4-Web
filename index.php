@@ -1,4 +1,2 @@
 <?php
-header('Location: ws/views/Authentification/login.php');
-exit;
-?>
+header("Location: ws/views/Authentification/login.php");

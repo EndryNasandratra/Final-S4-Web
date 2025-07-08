@@ -1,10 +1,9 @@
  <?php
-
     require_once __DIR__ . '/../db.php';
 
     class AppModel
     {
-        public static function  getAll($table_name)
+        public static function getAll($table_name)
         {
             $stmt = getDB()->query("SELECT * FROM {$table_name} ");
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -77,13 +76,16 @@
             $stmt->execute(["filter" => $filter]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
-        public static function  getColumns($table_name)
+        public static function getColumns($table_name)
         {
-            $stmt = getDB()->query("SELECT column_name
- FROM information_schema.columns
- WHERE table_schema = 'public'
- AND table_name = '{$table_name}'");
-            return $stmt->fetchAll();
+            $sql = "SELECT COLUMN_NAME as column_name 
+            FROM INFORMATION_SCHEMA.COLUMNS 
+            WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :table_name";
+
+            $stmt = getDB()->prepare($sql);
+            $stmt->execute([':table_name' => $table_name]);
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         public static function  insert($table_name, $data)
@@ -105,7 +107,7 @@
             $columns = AppModel::getColumns($table_name);
 
             if (!isset($data['id'])) {
-                throw new \Exception("L'ID est requis pour mettre à jour un enregistrement.");
+                throw new \Exception("L'ID est requis pour mettre a jour un enregistrement.");
             }
             $setClause = [];
             $params = [];

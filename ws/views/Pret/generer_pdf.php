@@ -1,8 +1,8 @@
 <?php
-// Inclure la bibliothèque TCPDF (à installer via composer)
+// Inclure la bibliotheque TCPDF (a installer via composer)
 require_once('tcpdf/tcpdf.php');
 
-// Récupération des données du prêt (en pratique, depuis la base de données)
+// Recuperation des donnees du pret (en pratique, depuis la base de donnees)
 $pret_data = [
     'numero' => 'PRT-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT),
     'date' => date('d/m/Y'),
@@ -22,7 +22,7 @@ $pret_data = [
     'taeg' => 3.65
 ];
 
-// Création du PDF
+// Creation du PDF
 class MYPDF extends TCPDF {
     public function Header() {
         $this->SetFont('helvetica', 'B', 20);
@@ -40,25 +40,25 @@ class MYPDF extends TCPDF {
     }
 }
 
-// Création du document PDF
+// Creation du document PDF
 $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-// Définition des métadonnées
+// Definition des metadonnees
 $pdf->SetCreator('MNA_Banque');
 $pdf->SetAuthor('MNA_Banque');
 $pdf->SetTitle('Ajout de prêt - ' . $pret_data['numero']);
 $pdf->SetSubject('Ajout de prêt');
 $pdf->SetKeywords('prêt, simulation, banque');
 
-// Définition des marges
+// Definition des marges
 $pdf->SetMargins(15, 40, 15);
 $pdf->SetHeaderMargin(5);
 $pdf->SetFooterMargin(10);
 
-// Définition des sauts de page automatiques
+// Definition des sauts de page automatiques
 $pdf->SetAutoPageBreak(TRUE, 25);
 
-// Définition de la police
+// Definition de la police
 $pdf->SetFont('helvetica', '', 10);
 
 // Ajout d'une page
@@ -69,18 +69,18 @@ $pdf->SetFont('helvetica', 'B', 16);
 $pdf->Cell(0, 10, 'Ajout de prêt', 0, 1, 'C');
 $pdf->Ln(5);
 
-// Informations du prêt
+// Informations du pret
 $pdf->SetFont('helvetica', 'B', 12);
-$pdf->Cell(0, 8, 'Informations du prêt', 0, 1, 'L');
+$pdf->Cell(0, 8, 'Informations du pret', 0, 1, 'L');
 $pdf->SetFont('helvetica', '', 10);
 
-$pdf->Cell(40, 6, 'Numéro de prêt :', 0, 0);
+$pdf->Cell(40, 6, 'Numero de pret :', 0, 0);
 $pdf->Cell(0, 6, $pret_data['numero'], 0, 1);
 
 $pdf->Cell(40, 6, 'Date de simulation :', 0, 0);
 $pdf->Cell(0, 6, $pret_data['date'], 0, 1);
 
-$pdf->Cell(40, 6, 'Employé :', 0, 0);
+$pdf->Cell(40, 6, 'Employe :', 0, 0);
 $pdf->Cell(0, 6, $pret_data['employe'], 0, 1);
 
 $pdf->Ln(5);
@@ -96,7 +96,7 @@ $pdf->Cell(0, 6, $pret_data['client']['nom'], 0, 1);
 $pdf->Cell(40, 6, 'Adresse :', 0, 0);
 $pdf->Cell(0, 6, $pret_data['client']['adresse'], 0, 1);
 
-$pdf->Cell(40, 6, 'Téléphone :', 0, 0);
+$pdf->Cell(40, 6, 'Telephone :', 0, 0);
 $pdf->Cell(0, 6, $pret_data['client']['telephone'], 0, 1);
 
 $pdf->Cell(40, 6, 'Email :', 0, 0);
@@ -104,24 +104,24 @@ $pdf->Cell(0, 6, $pret_data['client']['email'], 0, 1);
 
 $pdf->Ln(5);
 
-// Conditions du prêt
+// Conditions du pret
 $pdf->SetFont('helvetica', 'B', 12);
-$pdf->Cell(0, 8, 'Conditions du prêt', 0, 1, 'L');
+$pdf->Cell(0, 8, 'Conditions du pret', 0, 1, 'L');
 $pdf->SetFont('helvetica', '', 10);
 
-$pdf->Cell(60, 6, 'Montant emprunté :', 0, 0);
+$pdf->Cell(60, 6, 'Montant emprunte :', 0, 0);
 $pdf->Cell(0, 6, number_format($pret_data['montant'], 2, ',', ' ') . ' €', 0, 1);
 
-$pdf->Cell(60, 6, 'Durée :', 0, 0);
+$pdf->Cell(60, 6, 'Duree :', 0, 0);
 $pdf->Cell(0, 6, $pret_data['duree'] . ' mois', 0, 1);
 
 $pdf->Cell(60, 6, 'Taux annuel :', 0, 0);
 $pdf->Cell(0, 6, $pret_data['taux'] . ' %', 0, 1);
 
-$pdf->Cell(60, 6, 'Mensualité :', 0, 0);
+$pdf->Cell(60, 6, 'Mensualite :', 0, 0);
 $pdf->Cell(0, 6, number_format($pret_data['mensualite'], 2, ',', ' ') . ' €', 0, 1);
 
-$pdf->Cell(60, 6, 'Intérêts totaux :', 0, 0);
+$pdf->Cell(60, 6, 'Interets totaux :', 0, 0);
 $pdf->Cell(0, 6, number_format($pret_data['interets_totaux'], 2, ',', ' ') . ' €', 0, 1);
 
 $pdf->Cell(60, 6, 'Coût total :', 0, 0);
@@ -137,15 +137,15 @@ $pdf->SetFont('helvetica', 'B', 12);
 $pdf->Cell(0, 8, 'Tableau d\'amortissement (extrait)', 0, 1, 'L');
 $pdf->SetFont('helvetica', '', 9);
 
-// En-têtes du tableau
+// En-tetes du tableau
 $pdf->SetFillColor(240, 240, 240);
-$pdf->Cell(25, 6, 'Échéance', 1, 0, 'C', true);
-$pdf->Cell(35, 6, 'Mensualité', 1, 0, 'C', true);
-$pdf->Cell(35, 6, 'Intérêts', 1, 0, 'C', true);
+$pdf->Cell(25, 6, 'echeance', 1, 0, 'C', true);
+$pdf->Cell(35, 6, 'Mensualite', 1, 0, 'C', true);
+$pdf->Cell(35, 6, 'Interets', 1, 0, 'C', true);
 $pdf->Cell(35, 6, 'Capital', 1, 0, 'C', true);
 $pdf->Cell(35, 6, 'Capital restant', 1, 1, 'C', true);
 
-// Données du tableau
+// Donnees du tableau
 $capital_restant = $pret_data['montant'];
 $taux_mensuel = $pret_data['taux'] / 100 / 12;
 
@@ -163,18 +163,18 @@ for ($mois = 1; $mois <= 6; $mois++) {
 
 $pdf->Ln(10);
 
-// Conditions générales
+// Conditions generales
 $pdf->SetFont('helvetica', 'B', 12);
-$pdf->Cell(0, 8, 'Conditions générales', 0, 1, 'L');
+$pdf->Cell(0, 8, 'Conditions generales', 0, 1, 'L');
 $pdf->SetFont('helvetica', '', 9);
 
 $conditions = [
-    'Cette simulation est valable 30 jours à compter de sa date d\'émission.',
-    'Le taux d\'intérêt peut varier selon l\'évolution des conditions de marché.',
+    'Cette simulation est valable 30 jours a compter de sa date d\'emission.',
+    'Le taux d\'interet peut varier selon l\'evolution des conditions de marche.',
     'Des frais de dossier peuvent s\'appliquer.',
-    'L\'assurance emprunteur est obligatoire et facturée en sus.',
-    'En cas de retard de paiement, des pénalités seront appliquées.',
-    'Le prêt peut être remboursé par anticipation avec des frais.',
+    'L\'assurance emprunteur est obligatoire et facturee en sus.',
+    'En cas de retard de paiement, des penalites seront appliquees.',
+    'Le pret peut etre rembourse par anticipation avec des frais.',
     'Cette simulation n\'engage pas la banque et ne constitue pas une offre ferme.'
 ];
 
@@ -186,7 +186,7 @@ $pdf->Ln(10);
 
 // Signature
 $pdf->SetFont('helvetica', 'B', 10);
-$pdf->Cell(0, 8, 'Signature de l\'employé :', 0, 1, 'L');
+$pdf->Cell(0, 8, 'Signature de l\'employe :', 0, 1, 'L');
 $pdf->Line(15, $pdf->GetY(), 80, $pdf->GetY());
 $pdf->Ln(5);
 $pdf->SetFont('helvetica', '', 9);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validation des prêts</title>
+    <title>Validation des prets</title>
     <style>
         body {
             margin: 0;
@@ -162,7 +162,7 @@
     </style>
 </head>
 <body>
-    <div class="header"><div class="logo">MNA_Banque</div> - Validation des prêts</div>
+    <div class="header"><div class="logo">MNA_Banque</div> - Validation des prets</div>
     <div class="layout">
         <nav class="sidebar">
             <a href="list_pret.php">Accueil</a>
@@ -183,31 +183,31 @@
     </div>
     
     <script>
-        // Charger les prêts en attente
+        // Charger les prets en attente
         async function loadPendingPrets() {
             try {
-                const response = await fetch('http://localhost/Final-S4-Web/ws/prets/not-validated');
+                const response = await fetch('http://localhost/Final_S4_Web/ws/prets/not-validated');
                 const data = await response.json();
                 
                 if (Array.isArray(data)) {
                     displayPrets(data);
                 } else {
                     document.getElementById('tableContainer').innerHTML = 
-                        '<div class="error">Erreur lors du chargement des données</div>';
+                        '<div class="error">Erreur lors du chargement des donnees</div>';
                 }
             } catch (error) {
                 console.error('Erreur:', error);
                 document.getElementById('tableContainer').innerHTML = 
-                    '<div class="error">Erreur lors du chargement des données: ' + error.message + '</div>';
+                    '<div class="error">Erreur lors du chargement des donnees: ' + error.message + '</div>';
             }
         }
 
-        // Afficher les prêts dans le tableau
+        // Afficher les prets dans le tableau
         function displayPrets(prets) {
             const tableContainer = document.getElementById('tableContainer');
             
             if (prets.length === 0) {
-                tableContainer.innerHTML = '<div class="loading">Aucun prêt en attente de validation</div>';
+                tableContainer.innerHTML = '<div class="loading">Aucun pret en attente de validation</div>';
                 return;
             }
 
@@ -215,11 +215,11 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>N° Prêt</th>
+                            <th>N° Pret</th>
                             <th>Client</th>
-                            <th>Employé</th>
+                            <th>Employe</th>
                             <th>Montant</th>
-                            <th>Durée</th>
+                            <th>Duree</th>
                             <th>Taux</th>
                             <th>Date demande</th>
                             <th>Statut</th>
@@ -267,14 +267,14 @@
         }
 
         function voirDetails(pretId) {
-            alert('Affichage des détails du prêt ID: ' + pretId);
-            // Ici, on pourrait ouvrir une modal ou rediriger vers une page de détails
+            alert('Affichage des details du pret ID: ' + pretId);
+            // Ici, on pourrait ouvrir une modal ou rediriger vers une page de details
         }
         
         async function validerPret(pretId) {
-            if (confirm('Êtes-vous sûr de vouloir valider ce prêt ?')) {
+            if (confirm('etes-vous sûr de vouloir valider ce pret ?')) {
                 try {
-                    const response = await fetch(`http://localhost/Final-S4-Web/ws/prets/${pretId}/validate`, {
+                    const response = await fetch(`http://localhost/Final_S4_Web/ws/prets/${pretId}/validate`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -284,15 +284,15 @@
                     const result = await response.json();
                     
                     if (response.ok && result.success) {
-                        alert('Prêt validé avec succès !');
-                        // Recharger la liste des prêts en attente
+                        alert('Pret valide avec succes !');
+                        // Recharger la liste des prets en attente
                         loadPendingPrets();
                     } else {
                         alert('Erreur lors de la validation: ' + (result.error || 'Erreur inconnue'));
                     }
                 } catch (error) {
                     console.error('Erreur:', error);
-                    alert('Erreur lors de la validation du prêt');
+                    alert('Erreur lors de la validation du pret');
                 }
             }
         }
@@ -300,9 +300,9 @@
         async function rejeterPret(pretId) {
             const raison = prompt('Veuillez indiquer la raison du rejet :');
             if (raison !== null && raison.trim() !== '') {
-                if (confirm('Êtes-vous sûr de vouloir rejeter ce prêt ?')) {
+                if (confirm('etes-vous sûr de vouloir rejeter ce pret ?')) {
                     try {
-                        const response = await fetch(`http://localhost/Final-S4-Web/ws/prets/${pretId}/reject`, {
+                        const response = await fetch(`http://localhost/Final_S4_Web/ws/prets/${pretId}/reject`, {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -315,15 +315,15 @@
                         const result = await response.json();
                         
                         if (response.ok && result.success) {
-                            alert('Prêt rejeté avec succès !');
-                            // Recharger la liste des prêts en attente
+                            alert('Pret rejete avec succes !');
+                            // Recharger la liste des prets en attente
                             loadPendingPrets();
                         } else {
                             alert('Erreur lors du rejet: ' + (result.error || 'Erreur inconnue'));
                         }
                     } catch (error) {
                         console.error('Erreur:', error);
-                        alert('Erreur lors du rejet du prêt');
+                        alert('Erreur lors du rejet du pret');
                     }
                 }
             } else if (raison !== null) {
@@ -331,7 +331,7 @@
             }
         }
 
-        // Charger les données au chargement de la page
+        // Charger les donnees au chargement de la page
         document.addEventListener('DOMContentLoaded', function() {
             loadPendingPrets();
         });

@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>SetFont</title>
+<link type="text/css" rel="stylesheet" href="../fpdf.css">
+</head>
+<body>
+<h1>SetFont</h1>
+<code>SetFont(<b>string</b> family [, <b>string</b> style [, <b>float</b> size]])</code>
+<h2>Description</h2>
+Selectionne la police utilisee pour imprimer les chaînes de caracteres. Il est obligatoire
+d'appeler cette methode au moins une fois avant d'imprimer du texte.
+<br>
+<br>
+La police peut etre soit une police standard, soit une police ajoutee a l'aide de la methode
+AddFont(). Les polices standard utilisent l'encodage Windows cp1252 (Europe de l'ouest).
+<br>
+<br>
+La methode peut etre appelee avant que la premiere page ne soit creee et la police est conservee de page en page.
+<br>
+<br>
+Si vous souhaitez simplement changer la taille courante, il est plus simple d'appeler SetFontSize().
+<h2>Parametres</h2>
+<dl class="param">
+<dt><code>family</code></dt>
+<dd>
+Famille de la police. Il peut s'agir d'un nom defini par AddFont() ou bien d'une des familles
+standard :
+<ul>
+<li><code>Courier</code> (caracteres de largeur fixe)</li>
+<li><code>Helvetica</code> ou <code>Arial</code> (synonymes; sans serif)</li>
+<li><code>Times</code> (avec serif)</li>
+<li><code>Symbol</code> (symboles)</li>
+<li><code>ZapfDingbats</code> (symboles)</li>
+</ul>
+Le nom n'est pas sensible a la casse.
+<br>
+Il est egalement possible de passer une chaîne vide, auquel cas la famille courante est
+conservee.
+</dd>
+<dt><code>style</code></dt>
+<dd>
+Style de la police. Les valeurs possibles sont (independamment de la casse) :
+<ul>
+<li>chaîne vide : normal</li>
+<li><code>B</code> : gras</li>
+<li><code>I</code> : italique</li>
+<li><code>U</code> : souligne</li>
+</ul>
+ou une combinaison quelconque. La valeur par defaut est le style normal.
+Les styles gras et italique ne s'appliquent pas aux familles <code>Symbol</code> et <code>ZapfDingbats</code>.
+</dd>
+<dt><code>size</code></dt>
+<dd>
+Taille de la police en points.
+<br>
+La valeur par defaut est la taille courante. Si aucune taille n'a encore ete specifiee
+depuis le debut du document, la valeur prise est 12.
+</dd>
+</dl>
+<h2>Exemple</h2>
+<div class="doc-source">
+<pre><code>// Times normal 12
+$pdf-&gt;SetFont('Times');
+// Arial gras 14
+$pdf-&gt;SetFont('Arial', 'B', 14);
+// Enleve le gras
+$pdf-&gt;SetFont('');
+// Times gras, italique et souligne 14
+$pdf-&gt;SetFont('Times', 'BIU');</code></pre>
+</div>
+<h2>Voir</h2>
+<a href="addfont.htm">AddFont</a>,
+<a href="setfontsize.htm">SetFontSize</a>,
+<a href="cell.htm">Cell</a>,
+<a href="multicell.htm">MultiCell</a>,
+<a href="write.htm">Write</a>
+<hr style="margin-top:1.5em">
+<div style="text-align:center"><a href="index.htm">Index</a></div>
+</body>
+</html>
