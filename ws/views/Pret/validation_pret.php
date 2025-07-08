@@ -171,7 +171,6 @@
             <a href="list_interet_mensuel.php">Interet mensuel</a>
             <a href="ajout_pret.php">Ajout de pret</a>
             <a href="simulateur_pret.php">Simulateur de pret</a>
-            <a href="montant_dispo.php">Solde mensuel</a>
             <a href="#">Deconnexion</a>
         </nav>
         <main class="main-content">
@@ -188,7 +187,7 @@
         // Charger les prets en attente
         async function loadPendingPrets() {
             try {
-                const response = await fetch('/Final_S4_Web/ws/prets/not-validated');
+                const response = await fetch('http://localhost/Final_S4_Web/ws/prets/not-validated');
                 const data = await response.json();
                 
                 if (Array.isArray(data)) {
@@ -276,7 +275,7 @@
         async function validerPret(pretId) {
             if (confirm('etes-vous sûr de vouloir valider ce pret ?')) {
                 try {
-                    const response = await fetch(`/Final_S4_Web/ws/prets/${pretId}/validate`, {
+                    const response = await fetch(`http://localhost/Final_S4_Web/ws/prets/${pretId}/validate`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -304,7 +303,7 @@
             if (raison !== null && raison.trim() !== '') {
                 if (confirm('etes-vous sûr de vouloir rejeter ce pret ?')) {
                     try {
-                        const response = await fetch(`/Final_S4_Web/ws/prets/${pretId}/reject`, {
+                        const response = await fetch(`http://localhost/Final_S4_Web/ws/prets/${pretId}/reject`, {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json',

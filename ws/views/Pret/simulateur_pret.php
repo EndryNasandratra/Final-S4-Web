@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulateur de Pret - Banque</title>
+    <title>Simulateur de Prêt - Banque</title>
     <style>
         body {
             margin: 0;
@@ -222,48 +222,47 @@
 
 <body>
     <div class="header">
-        <div class="logo">MNA_Banque</div> - Simulateur de Pret
+        <div class="logo">MNA_Banque</div> - Simulateur de Prêt
     </div>
     <div class="layout">
         <nav class="sidebar">
             <a href="list_pret.php">Accueil</a>
-            <a href="../Ressources/settings.php">Parametres</a>
-            <a href="validation_pret.php">Validation pret</a>
-            <a href="list_interet_mensuel.php">Interet mensuel</a>
-            <a href="ajout_pret.php">Ajout de pret</a>
-            <a href="simulateur_pret.php">Simulateur de pret</a>
-            <a href="montant_dispo.php">Solde mensuel</a>
-            <a href="#">Deconnexion</a>
+            <a href="../Ressources/settings.php">Paramètres</a>
+            <a href="validation_pret.php">Validation prêt</a>
+            <a href="list_interet_mensuel.php">Intérêt mensuel</a>
+            <a href="ajout_pret.php">Ajout de prêt</a>
+            <a href="simulateur_pret.php">Simulateur de prêt</a>
+            <a href="#">Déconnexion</a>
         </nav>
         <main class="main-content">
-            <h1 class="main-title">Simulateur de Pret</h1>
+            <h1 class="main-title">Simulateur de Prêt</h1>
 
             <div class="simulator-container">
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="client">Client</label>
                         <select id="client" name="client">
-                            <option value="">Selectionnez un client</option>
+                            <option value="">Sélectionnez un client</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="type_pret">Type de pret</label>
+                        <label for="type_pret">Type de prêt</label>
                         <select id="type_pret" name="type_pret">
-                            <option value="">Selectionnez un type de pret</option>
+                            <option value="">Sélectionnez un type de prêt</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="taux_pret">Taux de pret</label>
+                        <label for="taux_pret">Taux de prêt</label>
                         <select id="taux_pret" name="taux_pret" disabled>
-                            <option value="">Selectionnez d'abord un type de pret</option>
+                            <option value="">Sélectionnez d'abord un type de prêt</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="montant">Montant a emprunter (€)</label>
+                        <label for="montant">Montant à emprunter (€)</label>
                         <input type="number" id="montant" min="1000" max="999999.99" step="100" value="50000">
                     </div>
                     <div class="form-group">
-                        <label for="duree">Duree du pret : <span id="duree-val" class="value-display">120 mois</span></label>
+                        <label for="duree">Durée du prêt : <span id="duree-val" class="value-display">120 mois</span></label>
                         <input type="range" id="duree" min="1" max="300" step="1" value="120">
                     </div>
                     <div class="form-group full-width">
@@ -288,20 +287,20 @@
                     </div>
                     <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 1rem 0;">
                     <div class="result-item">
-                        <span>Taux d'interet annuel</span>
+                        <span>Taux d'intérêt annuel</span>
                         <span id="res-taux-interet"></span>
                     </div>
                     <div class="result-item">
-                        <span>Coût total du credit</span>
+                        <span>Coût total du crédit</span>
                         <span id="res-cout-total"></span>
                     </div>
                     <div class="result-item">
-                        <strong><span id="mensualite-label">Votre mensualite</span></strong>
+                        <strong><span id="mensualite-label">Votre mensualité</span></strong>
                         <strong><span id="res-mensualite-totale"></span></strong>
                     </div>
 
                     <div class="button-group">
-                        <button id="valider-pret" style="display: none;">Valider le pret</button>
+                        <button id="valider-pret" style="display: none;">Valider le prêt</button>
                         <button id="export-pdf" style="display: none;">Exporter en PDF</button>
                     </div>
                 </div>
@@ -311,9 +310,9 @@
 
 
     <script>
-        const apiBase = "/Final_S4_Web/ws";
+        const apiBase = "http://localhost/Final_S4_Web/ws";
 
-        // Recuperer les elements du DOM
+        // Récupérer les éléments du DOM
         const clientSelect = document.getElementById('client');
         const typePretSelect = document.getElementById('type_pret');
         const tauxPretSelect = document.getElementById('taux_pret');
@@ -327,7 +326,7 @@
         const validerPretButton = document.getElementById('valider-pret');
         const exportPdfButton = document.getElementById('export-pdf');
 
-        // Mettre a jour les labels
+        // Mettre à jour les labels
         function updateLabels() {
             dureeVal.textContent = `${dureeSlider.value} mois (${(dureeSlider.value / 12).toFixed(1)} ans)`;
         }
@@ -352,7 +351,7 @@
                     return;
                 }
                 const clients = await response.json();
-                clientSelect.innerHTML = '<option value="">Selectionnez un client</option>';
+                clientSelect.innerHTML = '<option value="">Sélectionnez un client</option>';
                 clients.forEach(client => {
                     const option = document.createElement('option');
                     option.value = client.id;
@@ -365,18 +364,18 @@
             }
         }
 
-        // Charger les types de prets
+        // Charger les types de prêts
         async function loadTypePret() {
             try {
                 const response = await fetch(`${apiBase}/type_pret`);
                 if (!response.ok) {
                     const text = await response.text();
                     console.error('Non-JSON response:', text);
-                    displayError(`Erreur lors du chargement des types de prets: ${response.status} ${response.statusText}`);
+                    displayError(`Erreur lors du chargement des types de prêts: ${response.status} ${response.statusText}`);
                     return;
                 }
                 const types = await response.json();
-                typePretSelect.innerHTML = '<option value="">Selectionnez un type de pret</option>';
+                typePretSelect.innerHTML = '<option value="">Sélectionnez un type de prêt</option>';
                 types.forEach(type => {
                     const option = document.createElement('option');
                     option.value = type.id;
@@ -385,16 +384,16 @@
                 });
             } catch (error) {
                 console.error('Erreur:', error);
-                displayError('Erreur lors du chargement des types de prets: ' + error.message);
+                displayError('Erreur lors du chargement des types de prêts: ' + error.message);
             }
         }
 
-        // Charger les taux de pret en fonction du type de pret
+        // Charger les taux de prêt en fonction du type de prêt
         async function loadTauxPret() {
             const type_pret = typePretSelect.value;
 
             if (!type_pret) {
-                tauxPretSelect.innerHTML = '<option value="">Selectionnez d\'abord un type de pret</option>';
+                tauxPretSelect.innerHTML = '<option value="">Sélectionnez d\'abord un type de prêt</option>';
                 tauxPretSelect.disabled = true;
                 return;
             }
@@ -404,13 +403,13 @@
                 if (!response.ok) {
                     const text = await response.text();
                     console.error('Non-JSON response:', text);
-                    displayError(`Erreur lors du chargement des taux de pret: ${response.status} ${response.statusText}`);
+                    displayError(`Erreur lors du chargement des taux de prêt: ${response.status} ${response.statusText}`);
                     tauxPretSelect.innerHTML = '<option value="">Erreur lors du chargement des taux</option>';
                     tauxPretSelect.disabled = true;
                     return;
                 }
                 const taux = await response.json();
-                tauxPretSelect.innerHTML = '<option value="">Selectionnez un taux de pret</option>';
+                tauxPretSelect.innerHTML = '<option value="">Sélectionnez un taux de prêt</option>';
                 if (taux.length === 0) {
                     tauxPretSelect.innerHTML = '<option value="">Aucun taux disponible</option>';
                     tauxPretSelect.disabled = true;
@@ -418,7 +417,7 @@
                     taux.forEach(t => {
                         const option = document.createElement('option');
                         option.value = t.id;
-                        option.textContent = `${t.taux_annuel}% (Duree: ${t.duree} mois, ${t.borne_inf}€ - ${t.borne_sup}€)`;
+                        option.textContent = `${t.taux_annuel}% (Durée: ${t.duree} mois, ${t.borne_inf}€ - ${t.borne_sup}€)`;
                         tauxPretSelect.appendChild(option);
                     });
                     tauxPretSelect.disabled = false;
@@ -427,7 +426,7 @@
                 console.error('Erreur:', error);
                 tauxPretSelect.innerHTML = '<option value="">Erreur lors du chargement des taux</option>';
                 tauxPretSelect.disabled = true;
-                displayError('Erreur lors du chargement des taux de pret: ' + error.message);
+                displayError('Erreur lors du chargement des taux de prêt: ' + error.message);
             }
         }
 
@@ -440,11 +439,11 @@
             const include_assurance = assuranceCheckbox.checked;
 
             if (!id_client) {
-                displayError('Veuillez selectionner un client.');
+                displayError('Veuillez sélectionner un client.');
                 return;
             }
             if (!id_taux_pret) {
-                displayError('Veuillez selectionner un taux de pret.');
+                displayError('Veuillez sélectionner un taux de prêt.');
                 return;
             }
             if (isNaN(montant) || montant <= 0) {
@@ -452,7 +451,7 @@
                 return;
             }
             if (isNaN(duree_mois) || duree_mois <= 0) {
-                displayError('Veuillez selectionner une duree valide.');
+                displayError('Veuillez sélectionner une durée valide.');
                 return;
             }
 
@@ -497,7 +496,7 @@
             }
         }
 
-        // Valider le pret
+        // Valider le prêt
         async function validerPret() {
             const id_client = clientSelect.value;
             const id_taux_pret = tauxPretSelect.value;
@@ -506,11 +505,11 @@
             const include_assurance = assuranceCheckbox.checked;
 
             if (!id_client) {
-                displayError('Veuillez selectionner un client.');
+                displayError('Veuillez sélectionner un client.');
                 return;
             }
             if (!id_taux_pret) {
-                displayError('Veuillez selectionner un taux de pret avant de valider.');
+                displayError('Veuillez sélectionner un taux de prêt avant de valider.');
                 return;
             }
             if (isNaN(montant) || montant <= 0) {
@@ -518,7 +517,7 @@
                 return;
             }
             if (isNaN(duree_mois) || duree_mois <= 0) {
-                displayError('Veuillez selectionner une duree valide.');
+                displayError('Veuillez sélectionner une durée valide.');
                 return;
             }
 
@@ -551,16 +550,16 @@
 
                 const result = await response.json();
                 if (result.success) {
-                    alert(`Pret valide avec succes ! ID du pret : ${result.pret_id}`);
+                    alert(`Prêt validé avec succès ! ID du prêt : ${result.pret_id}`);
                     resultsDiv.style.display = 'none';
                     validerPretButton.style.display = 'none';
                     exportPdfButton.style.display = 'none';
                 } else {
-                    displayError(result.error || 'Erreur lors de la validation du pret.');
+                    displayError(result.error || 'Erreur lors de la validation du prêt.');
                 }
             } catch (error) {
                 console.error('Erreur:', error);
-                displayError('Erreur lors de la validation du pret: ' + error.message);
+                displayError('Erreur lors de la validation du prêt: ' + error.message);
             }
         }
 
@@ -573,11 +572,11 @@
             const include_assurance = assuranceCheckbox.checked;
 
             if (!id_client) {
-                displayError('Veuillez selectionner un client.');
+                displayError('Veuillez sélectionner un client.');
                 return;
             }
             if (!id_taux_pret) {
-                displayError('Veuillez selectionner un taux de pret avant d\'exporter.');
+                displayError('Veuillez sélectionner un taux de prêt avant d\'exporter.');
                 return;
             }
             if (isNaN(montant) || montant <= 0) {
@@ -585,7 +584,7 @@
                 return;
             }
             if (isNaN(duree_mois) || duree_mois <= 0) {
-                displayError('Veuillez selectionner une duree valide.');
+                displayError('Veuillez sélectionner une durée valide.');
                 return;
             }
 
@@ -631,7 +630,7 @@
             }
         }
 
-        // Afficher les resultats de la simulation
+        // Afficher les résultats de la simulation
         function displayResults(data, include_assurance) {
             const taux_interet_annuel = parseFloat(data.taux_interet_annuel) || 0;
             const taux_assurance_annuel = parseFloat(data.taux_assurance_annuel) || 0;
@@ -643,7 +642,7 @@
             document.getElementById('row-taux-assurance').style.display = showAssurance ? 'flex' : 'none';
             document.getElementById('row-mensualite-assurance').style.display = showAssurance ? 'flex' : 'none';
 
-            mensualiteLabel.textContent = include_assurance ? 'Votre mensualite (assurance incluse)' : 'Votre mensualite';
+            mensualiteLabel.textContent = include_assurance ? 'Votre mensualité (assurance incluse)' : 'Votre mensualité';
 
             document.getElementById('res-taux-interet').textContent = `${taux_interet_annuel.toFixed(2)} %`;
             document.getElementById('res-taux-assurance').textContent = `${taux_assurance_annuel.toFixed(2)} %`;
@@ -655,7 +654,7 @@
             errorMessage.style.display = 'none';
         }
 
-        // Attacher les ecouteurs d'evenements
+        // Attacher les écouteurs d'événements
         clientSelect.addEventListener('change', runSimulation);
         typePretSelect.addEventListener('change', loadTauxPret);
         tauxPretSelect.addEventListener('change', runSimulation);

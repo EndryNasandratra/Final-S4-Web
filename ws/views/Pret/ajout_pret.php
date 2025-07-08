@@ -189,7 +189,6 @@
             <a href="list_interet_mensuel.php">Interet mensuel</a>
             <a href="ajout_pret.php">Ajout de pret</a>
             <a href="simulateur_pret.php">Simulateur de pret</a>
-            <a href="montant_dispo.php">Solde mensuel</a>
             <a href="#">Deconnexion</a>
         </nav>
         <main class="main-content">
@@ -244,7 +243,7 @@
         // Charger les clients
         async function loadClients() {
             try {
-                const response = await fetch('/Final_S4_Web/ws/clients');
+                const response = await fetch('http://localhost/Final_S4_Web/ws/clients');
                 const data = await response.json();
 
                 const select = document.getElementById('client');
@@ -264,7 +263,7 @@
         // Charger les employes
         async function loadEmployes() {
             try {
-                const response = await fetch('/Final_S4_Web/ws/employes');
+                const response = await fetch('http://localhost/Final_S4_Web/ws/employes');
                 const data = await response.json();
 
                 const select = document.getElementById('employe');
@@ -284,7 +283,7 @@
         // Charger les taux de pret
         async function loadTauxPret() {
             try {
-                const response = await fetch('/Final_S4_Web/ws/taux-pret');
+                const response = await fetch('http://localhost/Final_S4_Web/ws/taux-pret');
                 const data = await response.json();
 
                 const select = document.getElementById('taux_pret');
@@ -304,7 +303,7 @@
         // Charger les taux d'assurance
         async function loadTauxAssurance() {
             try {
-                const response = await fetch('/Final_S4_Web/ws/taux-assurance');
+                const response = await fetch('http://localhost/Final_S4_Web/ws/taux-assurance');
                 const data = await response.json();
 
                 const select = document.getElementById('taux_assurance');
@@ -336,7 +335,7 @@
             };
 
             try {
-                const response = await fetch('/Final_S4_Web/ws/prets', {
+                const response = await fetch('http://localhost/Final_S4_Web/ws/prets', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

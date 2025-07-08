@@ -191,7 +191,6 @@
             <a href="list_interet_mensuel.php">Interet mensuel</a>
             <a href="ajout_pret.php">Ajout de pret</a>
             <a href="simulateur_pret.php">Simulateur de pret</a>
-            <a href="montant_dispo.php">Solde mensuel</a>
             <a href="formSimuler.php">Simulateur pour un apreçu de pret</a>
             <a href="comparerSimulation.php">Comparer les simulations enregistés</a>
             <a href="#">Deconnexion</a>
@@ -200,7 +199,7 @@
             <div class="container">
                 <h2>Liste des prets valides</h2>
                 <button type="button" class="filter-toggle-btn" onclick="toggleFilters()">Afficher les filtres</button>
-                <form id="filterForm">
+                <form method="get">
                     <div class="filters-block" id="filtersBlock">
                         <div class="filter-group">
                             <label for="client">Client</label>
@@ -243,13 +242,9 @@
             filtersBlock.classList.toggle('visible');
         }
 
-        // Fonction pour charger les prets valides avec filtres
-        function loadValidatedPrets(filters = {}) {
-            let url = '/Final_S4_Web/ws/prets/validated/filter';
-            const params = new URLSearchParams(filters).toString();
-            if (params) url += '?' + params;
-
-            fetch(url)
+        // Fonction pour charger les donnees des prets valides
+        function loadValidatedPrets() {
+            fetch('http://localhost/Final_S4_Web/ws/prets/validated')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Erreur reseau: ' + response.status);
@@ -257,9 +252,13 @@
                     return response.json();
                 })
                 .then(data => {
+                    console.log('Donnees reçues:', data);
+                    console.log('Type de donnees:', typeof data);
+                    console.log('Est-ce un tableau?', Array.isArray(data));
                     displayPrets(data);
                 })
                 .catch(error => {
+                    console.error('Erreur:', error);
                     document.getElementById('tableContainer').innerHTML = 
                         '<div class="error">Erreur lors du chargement des donnees: ' + error.message + '</div>';
                 });
@@ -338,18 +337,7 @@
             alert('Voir les details du pret ID: ' + id);
         }
 
-        // Intercepter la soumission du formulaire pour appliquer les filtres dynamiquement
-        document.getElementById('filterForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const filters = {};
-            ['client', 'employe', 'taux', 'montant', 'date', 'duree'].forEach(id => {
-                const val = document.getElementById(id).value;
-                if (val) filters[id] = val;
-            });
-            loadValidatedPrets(filters);
-        });
-
-        // Charger les donnees au chargement de la page (sans filtre)
+        // Charger les donnees au chargement de la page
         document.addEventListener('DOMContentLoaded', function() {
             loadValidatedPrets();
         });

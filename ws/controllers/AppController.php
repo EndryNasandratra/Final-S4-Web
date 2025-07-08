@@ -46,7 +46,7 @@ class AppController
                 "borne_inf" => $borne_inf,
                 "borne_sup" => $borne_sup
             ]);
-            Flight::json(['status' => 'success', 'message' => 'Taux pret ajoute avec succes !'], 201);
+            Flight::json(['status' => 'success', 'message' => 'Taux prêt ajouté avec succès !'], 201);
         } catch (\Exception $e) {
             $status = $e->getCode() ?: 500;
             Flight::json(['error' => $e->getMessage()], $status);
