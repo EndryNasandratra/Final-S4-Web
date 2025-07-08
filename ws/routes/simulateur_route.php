@@ -9,4 +9,5 @@ Flight::route('GET /type_pret', ['SimulationController', 'getAllTypePret']);
 
 Flight::route('GET /taux_pret', ['SimulationController', 'getAllTauxPretById']);
 Flight::route('POST /simulateur/valider', ['SimulationController', 'validerPret']);
+
 Flight::route('POST /simulateur/export_pdf', ['SimulationController', 'exportSimulationPDF']);

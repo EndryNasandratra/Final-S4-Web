@@ -137,31 +137,26 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
                 <option value="">Sélectionnez un type de prêt</option>
             </select>
         </div>
-
         <div class="form-group">
             <label for="taux_pret">Taux de prêt</label>
             <select id="taux_pret" name="taux_pret" disabled>
                 <option value="">Sélectionnez d'abord un type de prêt</option>
             </select>
         </div>
-
         <div class="form-group">
             <label for="montant">Montant à emprunter (€)</label>
             <input type="number" id="montant" min="1000" max="999999.99" step="100" value="50000">
         </div>
-
         <div class="form-group">
             <label for="duree">Durée du prêt : <span id="duree-val" class="value-display">120 mois</span></label>
             <input type="range" id="duree" min="1" max="300" step="1" value="120">
         </div>
-
         <div class="form-group">
             <label for="include_assurance" class="label-inline">
                 <input type="checkbox" id="include_assurance">
                 Inclure l'assurance emprunteur
             </label>
         </div>
-
         <div id="results">
             <h2>Votre simulation</h2>
             <div class="result-item" id="row-taux-assurance"><span>Taux d'assurance annuel</span> <span id="res-taux-assurance"></span></div>
@@ -182,7 +177,6 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
         const apiBase = "<?= $api_url ?>";
 
         // Récupérer les éléments du DOM
-        const typeRessourceSelect = document.getElementById('type_ressource');
         const typePretSelect = document.getElementById('type_pret');
         const tauxPretSelect = document.getElementById('taux_pret');
         const montantInput = document.getElementById('montant');
@@ -263,18 +257,26 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
         // Lancer la simulation
         function runSimulation() {
             const id_taux_pret = tauxPretSelect.value;
-            const montant = montantInput.value;
-            const duree_mois = dureeSlider.value;
+            const montant = parseFloat(montantInput.value);
+            const duree_mois = parseInt(dureeSlider.value);
             const include_assurance = assuranceCheckbox.checked;
 
-            console.log('runSimulation - include_assurance:', include_assurance); // Débogage
+            console.log('runSimulation - id_taux_pret:', id_taux_pret, 'montant:', montant, 'duree_mois:', duree_mois, 'include_assurance:', include_assurance); // Débogage
 
             if (!id_taux_pret) {
                 displayError("Veuillez sélectionner un taux de prêt.");
                 return;
             }
+            if (montant <= 0 || isNaN(montant)) {
+                displayError("Veuillez entrer un montant valide.");
+                return;
+            }
+            if (duree_mois <= 0 || isNaN(duree_mois)) {
+                displayError("Veuillez sélectionner une durée valide.");
+                return;
+            }
 
-            const data = `id_taux_pret=${id_taux_pret}&montant=${montant}&duree_mois=${duree_mois}&include_assurance=${include_assurance}`;
+            const data = `id_taux_pret=${encodeURIComponent(id_taux_pret)}&montant=${encodeURIComponent(montant)}&duree_mois=${encodeURIComponent(duree_mois)}&include_assurance=${encodeURIComponent(include_assurance)}`;
 
             const xhr = new XMLHttpRequest();
             xhr.open("POST", apiBase + "/simulateur/calculer", true);
@@ -298,7 +300,7 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
                                 exportPdfButton.style.display = 'block';
                             }
                         } catch (e) {
-                            displayError("Erreur lors du traitement de la réponse de la simulation.");
+                            displayError("Erreur lors du traitement de la réponse de la simulation : " + e.message);
                         }
                     } else {
                         try {
@@ -316,16 +318,26 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
         // Valider le prêt
         function validerPret() {
             const id_taux_pret = tauxPretSelect.value;
-            const montant = montantInput.value;
-            const duree_mois = dureeSlider.value;
+            const montant = parseFloat(montantInput.value);
+            const duree_mois = parseInt(dureeSlider.value);
             const include_assurance = assuranceCheckbox.checked;
+
+            console.log('validerPret - id_taux_pret:', id_taux_pret, 'montant:', montant, 'duree_mois:', duree_mois, 'include_assurance:', include_assurance); // Débogage
 
             if (!id_taux_pret) {
                 displayError("Veuillez sélectionner un taux de prêt avant de valider.");
                 return;
             }
+            if (montant <= 0 || isNaN(montant)) {
+                displayError("Veuillez entrer un montant valide.");
+                return;
+            }
+            if (duree_mois <= 0 || isNaN(duree_mois)) {
+                displayError("Veuillez sélectionner une durée valide.");
+                return;
+            }
 
-            const data = `id_taux_pret=${id_taux_pret}&montant=${montant}&duree_mois=${duree_mois}&include_assurance=${include_assurance}`;
+            const data = `id_taux_pret=${encodeURIComponent(id_taux_pret)}&montant=${encodeURIComponent(montant)}&duree_mois=${encodeURIComponent(duree_mois)}&include_assurance=${encodeURIComponent(include_assurance)}`;
 
             const xhr = new XMLHttpRequest();
             xhr.open("POST", apiBase + "/simulateur/valider", true);
@@ -346,7 +358,7 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
                                 displayError(response.error || "Erreur lors de la validation du prêt.");
                             }
                         } catch (e) {
-                            displayError("Erreur lors du traitement de la réponse de validation.");
+                            displayError("Erreur lors du traitement de la réponse de validation : " + e.message);
                         }
                     } else {
                         try {
@@ -364,25 +376,32 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
         // Exporter la simulation en PDF
         function exportPDF() {
             const id_taux_pret = tauxPretSelect.value;
-            const montant = montantInput.value;
-            const duree_mois = dureeSlider.value;
+            const montant = parseFloat(montantInput.value);
+            const duree_mois = parseInt(dureeSlider.value);
             const include_assurance = assuranceCheckbox.checked;
+
+            console.log('exportPDF - id_taux_pret:', id_taux_pret, 'montant:', montant, 'duree_mois:', duree_mois, 'include_assurance:', include_assurance); // Débogage
 
             if (!id_taux_pret) {
                 displayError("Veuillez sélectionner un taux de prêt avant d'exporter.");
                 return;
             }
-            if (!id_type_ressource) {
-                displayError("Veuillez sélectionner un type de ressource avant d'exporter.");
+            if (montant <= 0 || isNaN(montant)) {
+                displayError("Veuillez entrer un montant valide.");
+                return;
+            }
+            if (duree_mois <= 0 || isNaN(duree_mois)) {
+                displayError("Veuillez sélectionner une durée valide.");
                 return;
             }
 
-            const data = `id_taux_pret=${id_taux_pret}&montant=${montant}&duree_mois=${duree_mois}&include_assurance=${include_assurance}&id_type_ressource=${id_type_ressource}`;
+            const data = `id_taux_pret=${encodeURIComponent(id_taux_pret)}&montant=${encodeURIComponent(montant)}&duree_mois=${encodeURIComponent(duree_mois)}&include_assurance=${encodeURIComponent(include_assurance)}`;
+            console.log('exportPDF - Données envoyées:', data); // Débogage
 
             const xhr = new XMLHttpRequest();
             xhr.open("POST", apiBase + "/simulateur/export_pdf", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.responseType = 'blob'; // Attendre un fichier binaire (PDF)
+            xhr.responseType = 'blob';
 
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4) {
@@ -400,14 +419,22 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
                         document.body.removeChild(a);
                         window.URL.revokeObjectURL(url);
                     } else {
-                        try {
-                            xhr.responseText.then(text => {
-                                const errorData = JSON.parse(text);
-                                displayError(errorData.error || "Une erreur est survenue lors de l'exportation en PDF.");
-                            });
-                        } catch (e) {
-                            displayError("Erreur lors de l'exportation : réponse invalide du serveur.");
-                        }
+                        console.log('exportPDF - Erreur HTTP:', xhr.status, xhr.statusText); // Débogage
+                        const errorXhr = new XMLHttpRequest();
+                        errorXhr.open("POST", apiBase + "/simulateur/export_pdf", true);
+                        errorXhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        errorXhr.onreadystatechange = () => {
+                            if (errorXhr.readyState === 4) {
+                                console.log('errorXhr - Statut:', errorXhr.status, 'Réponse:', errorXhr.responseText); // Débogage
+                                try {
+                                    const errorData = JSON.parse(errorXhr.responseText);
+                                    displayError(errorData.error || `Erreur lors de l'exportation en PDF (statut ${xhr.status}).`);
+                                } catch (e) {
+                                    displayError(`Erreur lors de l'exportation : réponse invalide du serveur (statut ${xhr.status}).`);
+                                }
+                            }
+                        };
+                        errorXhr.send(data);
                     }
                 }
             };
@@ -421,8 +448,7 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
             const mensualite_totale = parseFloat(data.mensualite_totale) || 0;
             const cout_total_credit = parseFloat(data.cout_total_credit) || 0;
 
-            console.log('displayResults - include_assurance:', include_assurance); // Débogage
-            console.log('displayResults - taux_assurance_annuel:', taux_assurance_annuel); // Débogage
+            console.log('displayResults - include_assurance:', include_assurance, 'taux_assurance_annuel:', taux_assurance_annuel); // Débogage
 
             const showAssurance = include_assurance && taux_assurance_annuel > 0;
             document.getElementById('row-taux-assurance').style.display = showAssurance ? 'flex' : 'none';

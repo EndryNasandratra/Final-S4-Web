@@ -80,9 +80,9 @@ class SimulationModel
         }
     }
 
-    public static function validerPret($id_taux_pret, $montant, $duree_mois, $include_assurance, $id_type_ressource)
+    public static function validerPret($id_taux_pret, $montant, $duree_mois, $include_assurance)
     {
-        if (!$id_taux_pret || $montant <= 0 || $duree_mois <= 0 || !$id_type_ressource) {
+        if (!$id_taux_pret || $montant <= 0 || $duree_mois <= 0) {
             throw new Exception('Données invalides fournies.', 400);
         }
 
@@ -116,6 +116,8 @@ class SimulationModel
                 $id_taux_assurance = 1;
             }
 
+            // Sélectionner la ressource par défaut (id_type_resssource = 1)
+            $id_type_ressource = 1;
             $stmt = $db->prepare('
                 SELECT id, valeur 
                 FROM ressources 
@@ -125,12 +127,12 @@ class SimulationModel
             $ressource = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$ressource) {
-                throw new Exception('Ressource non trouvée.', 400);
+                throw new Exception('Ressource par défaut non trouvée.', 400);
             }
 
             $newRessourceValue = $ressource['valeur'] - $montant;
             if ($newRessourceValue < 0) {
-                throw new Exception('Solde insuffisant pour la ressource sélectionnée.', 400);
+                throw new Exception('Solde insuffisant pour la ressource par défaut.', 400);
             }
 
             $now = new DateTime();
@@ -210,4 +212,3 @@ class SimulationModel
         return $taux;
     }
 }
-?>

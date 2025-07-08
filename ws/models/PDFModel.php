@@ -2,10 +2,10 @@
 require_once __DIR__ . '/../db.php';
 
 require("utils/fpdf.php");
-class PDFModel
+class PDFModel extends FPDF
 {
 
-    public static function generateSimulationPDF($simulationData, $typePret, $tauxPret, $typeRessource, $year)
+    public  function generateSimulationPDF($simulationData, $typePret, $tauxPret, $typeRessource, $year)
     {
         $this->SetMargins(15, 10, 15);
         $this->SetAutoPageBreak(true, 15);
@@ -69,7 +69,7 @@ class PDFModel
         $this->Output('D', $filename);
     }
 
-    private static function truncate($string, $length)
+    private function truncate($string, $length)
     {
         if (strlen($string) > $length) {
             return substr($string, 0, $length - 3) . '...';

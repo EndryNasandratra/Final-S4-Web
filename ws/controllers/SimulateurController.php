@@ -59,11 +59,11 @@ class SimulationController
         $include_assurance = filter_var($data['include_assurance'] ?? false, FILTER_VALIDATE_BOOLEAN);
         $id_type_ressource = $data['id_type_ressource'] ?? null;
 
-        error_log("validerPret - include_assurance: " . ($include_assurance ? 'true' : 'false')); // Débogage
-        error_log("validerPret - id_type_ressource: " . $id_type_ressource); // Débogage
+        error_log("validerPret - include_assurance: " . ($include_assurance ? 'true' : 'false'));
+        error_log("validerPret - id_type_ressource: " . $id_type_ressource);
 
         try {
-            $result = SimulationModel::validerPret($id_taux_pret, $montant, $duree_mois, $include_assurance, $id_type_ressource);
+            $result = SimulationModel::validerPret($id_taux_pret, $montant, $duree_mois, $include_assurance);
             Flight::json($result);
         } catch (Exception $e) {
             $status = $e->getCode() ?: 500;
@@ -78,11 +78,11 @@ class SimulationController
         $montant = $data['montant'] ?? 0;
         $duree_mois = $data['duree_mois'] ?? 0;
         $include_assurance = filter_var($data['include_assurance'] ?? false, FILTER_VALIDATE_BOOLEAN);
-        $id_type_ressource = $data['id_type_ressource'] ?? null;
+        $id_type_ressource = 1;
         $year = date('Y');
 
-        error_log("exportSimulationPDF - include_assurance: " . ($include_assurance ? 'true' : 'false')); // Débogage
-        error_log("exportSimulationPDF - id_type_ressource: " . $id_type_ressource); // Débogage
+        error_log("exportSimulationPDF - include_assurance: " . ($include_assurance ? 'true' : 'false'));
+        error_log("exportSimulationPDF - id_type_ressource: " . $id_type_ressource);
 
         try {
             $simulationData = SimulationModel::calculerSimulation($id_taux_pret, $montant, $duree_mois, $include_assurance);
@@ -118,13 +118,10 @@ class SimulationController
             ');
             $stmt->execute(['id_type_ressource' => $id_type_ressource]);
             $typeRessource = $stmt->fetch(PDO::FETCH_ASSOC);
-            if (!$typeRessource) {
-                throw new Exception('Type de ressource non trouvé.', 400);
-            }
 
             $simulationData['montant'] = (float) $montant;
-
-            PDFModel::generateSimulationPDF($simulationData, $typePret, $tauxPret, $typeRessource, $year);
+            $pdfModel = new PDFModel();
+            $pdfModel->generateSimulationPDF($simulationData, $typePret, $tauxPret, $typeRessource, $year);
         } catch (Exception $e) {
             $status = $e->getCode() ?: 500;
             Flight::json(['error' => $e->getMessage()], $status);
