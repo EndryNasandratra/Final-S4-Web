@@ -199,6 +199,7 @@
             <a href="../pret/validation_pret.php">Validation pret</a>
             <a href="../pret/list_interet_mensuel.php">Interet mensuel</a>
             <a href="../pret/ajout_pret.php">Ajout de pret</a>
+            <a href="../pret/remboursement.php">Remboursement</a>
             <a href="../pret/simulateur_pret.php">Simulateur de pret</a>
             <a href="#">Deconnexion</a>
         </nav>

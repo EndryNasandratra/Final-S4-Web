@@ -22,6 +22,16 @@
             font-size: 1.2rem;
         }
 
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 0.6rem;
+            margin-right: 5px;
+            letter-spacing: 2px;
+            text-shadow: 1px 2px 8px #e0e7ff;
+        }
+
         .layout {
             display: flex;
             min-height: calc(100vh - 56px);
@@ -98,6 +108,7 @@
         }
 
         input[type="number"],
+        input[type="date"],
         select {
             width: 100%;
             padding: 0.8rem;
@@ -184,14 +195,24 @@
             <div class="simulator-container">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="pret">Prêt</label>
+                        <label for="pret">Prêt en cours</label>
                         <select id="pret" name="pret">
-                            <option value="">Sélectionnez un prêt</option>
+                            <option value="">Sélectionnez un prêt en cours</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mois_paiement">Mois de paiement</label>
+                        <select id="mois_paiement" name="mois_paiement">
+                            <option value="">Sélectionnez un mois</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="montant_retour">Montant retour (€)</label>
                         <input type="number" id="montant_retour" min="0" step="0.01" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="pourcentage_assurance">Pourcentage assurance (%)</label>
+                        <input type="number" id="pourcentage_assurance" min="0" max="100" step="0.01" value="0">
                     </div>
                     <div class="form-group full-width">
                         <label for="date_retour">Date de retour</label>
@@ -210,28 +231,35 @@
 
     <script>
         const apiBase = "http://localhost/Final_S4_Web/ws";
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        const currentMonth = today.getMonth();
 
         // Récupérer les éléments du DOM
         const pretSelect = document.getElementById('pret');
+        const moisPaiementSelect = document.getElementById('mois_paiement');
         const montantRetourInput = document.getElementById('montant_retour');
+        const pourcentageAssuranceInput = document.getElementById('pourcentage_assurance');
         const dateRetourInput = document.getElementById('date_retour');
         const errorMessage = document.getElementById('error-message');
         const ajouterRemboursementButton = document.getElementById('ajouter-remboursement');
 
-        // Charger les prêts
-        async function loadPrets() {
+        // Charger les prêts en cours (par exemple, statuts 'Valide' ou 'En cours')
+        async function loadPretsEnCours() {
             try {
-                const response = await fetch(`${apiBase}/prets/validated`);
+                const response = await fetch(`${apiBase}/prets`);
                 if (!response.ok) {
                     throw new Error(`Erreur HTTP: ${response.status}`);
                 }
                 const prets = await response.json();
-                pretSelect.innerHTML = '<option value="">Sélectionnez un prêt</option>';
+                pretSelect.innerHTML = '<option value="">Sélectionnez un prêt en cours</option>';
                 prets.forEach(pret => {
-                    const option = document.createElement('option');
-                    option.value = pret.id;
-                    option.textContent = `Prêt #${pret.id} - ${pret.client_nom} ${pret.client_prenom} - ${pret.montant}€`;
-                    pretSelect.appendChild(option);
+                    if (pret.statut && ['Valide', 'En cours'].includes(pret.statut)) {
+                        const option = document.createElement('option');
+                        option.value = pret.id;
+                        option.textContent = `Prêt #${pret.id} - ${pret.client_nom} ${pret.client_prenom} - ${pret.montant_emprunte}€`;
+                        pretSelect.appendChild(option);
+                    }
                 });
             } catch (error) {
                 console.error('Erreur:', error);
@@ -240,10 +268,34 @@
             }
         }
 
+        // Générer les options de mois jusqu'à la date de retour
+        function generateMoisOptions() {
+            const dateRetour = new Date(dateRetourInput.value);
+            moisPaiementSelect.innerHTML = '<option value="">Sélectionnez un mois</option>';
+
+            for (let year = currentYear; year <= dateRetour.getFullYear(); year++) {
+                const startMonth = (year === currentYear) ? currentMonth : 0;
+                const endMonth = (year === dateRetour.getFullYear()) ? dateRetour.getMonth() : 11;
+
+                for (let month = startMonth; month <= endMonth; month++) {
+                    const monthName = new Date(year, month, 1).toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
+                    const option = document.createElement('option');
+                    option.value = `${year}-${month + 1}`; // Format YYYY-MM
+                    option.textContent = monthName;
+                    moisPaiementSelect.appendChild(option);
+                }
+            }
+        }
+
+        // Mettre à jour les mois lorsque la date de retour change
+        dateRetourInput.addEventListener('change', generateMoisOptions);
+
         // Ajouter un remboursement
         async function ajouterRemboursement() {
             const id_pret = pretSelect.value;
+            const mois_paiement = moisPaiementSelect.value;
             const montant_retour = parseFloat(montantRetourInput.value);
+            const pourcentage_assurance = parseFloat(pourcentageAssuranceInput.value);
             const date_retour = dateRetourInput.value;
 
             if (!id_pret) {
@@ -251,8 +303,18 @@
                 errorMessage.style.display = 'block';
                 return;
             }
+            if (!mois_paiement) {
+                errorMessage.textContent = 'Veuillez sélectionner un mois de paiement.';
+                errorMessage.style.display = 'block';
+                return;
+            }
             if (isNaN(montant_retour) || montant_retour <= 0) {
                 errorMessage.textContent = 'Veuillez entrer un montant valide.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            if (isNaN(pourcentage_assurance) || pourcentage_assurance < 0) {
+                errorMessage.textContent = 'Veuillez entrer un pourcentage d\'assurance valide.';
                 errorMessage.style.display = 'block';
                 return;
             }
@@ -262,6 +324,9 @@
                 return;
             }
 
+            // Calculer le montant avec assurance
+            const montant_avec_assurance = montant_retour + (montant_retour * (pourcentage_assurance / 100));
+
             try {
                 const response = await fetch(`${apiBase}/remboursements`, {
                     method: 'POST',
@@ -270,7 +335,7 @@
                     },
                     body: JSON.stringify({
                         id_pret: id_pret,
-                        montant_retour: montant_retour,
+                        montant_retour: montant_avec_assurance,
                         date_retour: date_retour
                     })
                 });
@@ -283,6 +348,7 @@
                 if (result.success) {
                     alert('Remboursement ajouté avec succès!');
                     montantRetourInput.value = '0';
+                    pourcentageAssuranceInput.value = '0';
                     errorMessage.style.display = 'none';
                 } else {
                     errorMessage.textContent = result.error || 'Erreur lors de l\'ajout du remboursement.';
@@ -300,7 +366,8 @@
 
         // Lancement initial
         document.addEventListener('DOMContentLoaded', () => {
-            loadPrets();
+            loadPretsEnCours();
+            generateMoisOptions();
         });
     </script>
 </body>
