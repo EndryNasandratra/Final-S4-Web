@@ -223,7 +223,8 @@
             <a href="montant_dispo.php">Solde mensuel</a>
             <a href="formSimuler.php">Simulateur pour un apreçu de pret</a>
             <a href="comparerSimulation.php">Comparer les simulations enregistés</a>
-            <a href="#">Deconnexion</a>
+            <a href="remboursement.php">Remboursement</a>
+            <a href="#">Déconnexion</a>
         </nav>
         <main class="main-content">
             <div class="container">

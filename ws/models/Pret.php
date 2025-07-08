@@ -86,22 +86,6 @@ class Pret {
             // Creer un statut par defaut "En attente"
             $stmt = $db->prepare("INSERT INTO statut_pret (libelle, id_pret) VALUES (?, ?)");
             $stmt->execute(['En attente', $id]);
-
-            $stmt = $db->prepare("SELECT * FROM ressources WHERE id=1");
-            $stmt->execute();
-            $ressource = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$ressource) {
-                throw new Exception("Ressource non trouvee");
-            }
-
-            $new_value = $ressource['valeur'] - $data->montant_emprunte;
-
-            $stmt = $db->prepare("UPDATE ressources set valeur= $new_value WHERE id=1");
-            $stmt->execute();
-
-            $stmt = $db->prepare("INSERT INTO historique_ressource (id_ressource, valeur, date_historique) VALUES (1, $data->montant_emprunte, $data->date_pret)");
-            $stmt->execute();
             
             // Valider la transaction
             $db->commit();

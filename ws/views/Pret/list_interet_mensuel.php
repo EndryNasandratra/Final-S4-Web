@@ -213,6 +213,7 @@
             <a href="montant_dispo.php">Solde mensuel</a>
             <a href="formSimuler.php">Simulateur pour un apreçu de pret</a>
             <a href="comparerSimulation.php">Comparer les simulations enregistés</a>
+            <a href="remboursement.php">Remboursement</a>
             <a href="#">Deconnexion</a>
         </nav>
         <main class="main-content">
@@ -264,7 +265,7 @@
     </div>
 
     <script>
-        const apiBase = "/Final_S4_Web/ws";
+        const apiBase = "http://localhost/Final_S4_Web/ws";
         const urlGetAllData = `${apiBase}/interets_mensuels`;
         const urlGetFilteredData = `${apiBase}/filtrer_interets_mensuels`;
 
