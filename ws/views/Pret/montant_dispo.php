@@ -164,6 +164,8 @@
         <a href="ajout_pret.php">Ajout de pret</a>
         <a href="simulateur_pret.php">Simulateur de pret</a>
         <a href="montant_dispo.php">Solde mensuel</a>
+        <a href="formSimuler.php">Simulateur pour un apreçu de pret</a>
+        <a href="comparerSimulation.php">Comparer les simulations enregistés</a>
         <a href="#">Deconnexion</a>
     </nav>
     <main class="main-content">
@@ -195,30 +197,18 @@ function loadMontantDispo(dateDebut, dateFin) {
     if (dateDebut) params.append('dateDebut', dateDebut);
     if (dateFin) params.append('dateFin', dateFin);
     if ([...params].length) url += '?' + params.toString();
-    console.log('Appel API URL:', url);
-    document.getElementById('tableContainer').innerHTML = '<div class="loading">Chargement des donnees...</div>';
     fetch(url)
-        .then(response => {
-            console.log('Reponse brute:', response);
-            if (!response.ok) throw new Error('Erreur reseau: ' + response.status);
-            return response.json();
-        })
-        .then(data => {
-            console.log('Donnees JSON reçues:', data);
-            displayTable(data);
-        })
-        .catch(error => {
-            console.error('Erreur lors du fetch:', error);
-            document.getElementById('tableContainer').innerHTML = '<div class="error">Erreur: ' + error.message + '</div>';
-        });
+        .then(response => response.json())
+        .then(data => displayTable(data));
 }
+
 function displayTable(data) {
     if (!Array.isArray(data) || data.length === 0) {
-        document.getElementById('tableContainer').innerHTML = '<div class="loading">Aucune donnee trouvee</div>';
+        document.getElementById('tableContainer').innerHTML = '<div class="loading">Aucune donnée trouvée</div>';
         return;
     }
     let html = `<table><thead><tr>
-        <th>Mois</th><th>Annee</th><th>Montant non emprunte (€)</th><th>Remboursements clients (€)</th><th>Total a disposition (€)</th>
+        <th>Mois</th><th>Année</th><th>Montant non emprunté (€)</th><th>Remboursements clients (€)</th><th>Total à disposition (€)</th>
     </tr></thead><tbody>`;
     data.forEach(row => {
         html += `<tr>
@@ -232,6 +222,7 @@ function displayTable(data) {
     html += '</tbody></table>';
     document.getElementById('tableContainer').innerHTML = html;
 }
+
 document.getElementById('filterForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const dateDebut = document.getElementById('dateDebut').value;

@@ -218,8 +218,11 @@
             <a href="../Ressources/settings.php">Parametres</a>
             <a href="validation_pret.php">Validation pret</a>
             <a href="list_interet_mensuel.php">Interet mensuel</a>
-            <a href="simulation_pret.php">Simulation de pret</a>
+            <a href="ajout_pret.php">Ajout de pret</a>
+            <a href="simulateur_pret.php">Simulateur de pret</a>
             <a href="montant_dispo.php">Solde mensuel</a>
+            <a href="formSimuler.php">Simulateur pour un apreçu de pret</a>
+            <a href="comparerSimulation.php">Comparer les simulations enregistés</a>
             <a href="#">Deconnexion</a>
         </nav>
         <main class="main-content">

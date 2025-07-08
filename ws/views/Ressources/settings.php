@@ -201,6 +201,8 @@
             <a href="../pret/ajout_pret.php">Ajout de pret</a>
             <a href="../pret/simulateur_pret.php">Simulateur de pret</a>
             <a href="../pret/montant_dispo.php">Solde mensuel</a>
+            <a href="../pret/formSimuler.php">Simulateur pour un apreçu de pret</a>
+            <a href="../pret/comparerSimulation.php">Comparer les simulations enregistés</a>
             <a href="#">Deconnexion</a>
         </nav>
         <main class="main-content">

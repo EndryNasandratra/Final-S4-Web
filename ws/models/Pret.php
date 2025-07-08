@@ -241,7 +241,7 @@ class Pret {
             ];
         }
         // 1. Montant total des ressources (fixe)
-        $sqlRess = "SELECT SUM(valeur) as total_ressources FROM ressources";
+        $sqlRess = "SELECT valeur as total_ressources FROM ressources where id = 1";
         $rowRess = $db->query($sqlRess)->fetch(PDO::FETCH_ASSOC);
         $totalRessources = $rowRess ? floatval($rowRess['total_ressources']) : 0;
         // 2. Pour chaque mois, calculer le montant total emprunte jusqu'a la fin du mois
