@@ -181,10 +181,10 @@
     <div class="layout">
     <nav class="sidebar">
             <a href="list_pret.php">Accueil</a>
-            <a href="../Ressources/ajout_ressource.php">Ajouter une ressource</a>
-            <a href="create_type_pret.php">Ajouter un type de pret</a>
-            <a href="create_pret.php">Ajouter un pret</a>
+            <a href="../Ressources/settings.php">Parametres</a>
+            <a href="validation_pret.php">Validation pret</a>
             <a href="list_interet_mensuel.php">Interet mensuel</a>
+            <a href="ajout_pret.php">Ajout de prêt</a>
             <a href="#">Déconnexion</a>
         </nav>
         <main class="main-content">
@@ -258,15 +258,9 @@
                     </div>
                 </form>
                 <script>
-                // Données brutes (toutes les lignes d'intérêts individuels)
-                const donneesBrutes = [
-                    { client: 'Dupont Jean', pret: 'Prêt #1001', mois: 'Juin', annee: 2024, interet: 120.50 },
-                    { client: 'Durand Alice', pret: 'Prêt #1002', mois: 'Mai', annee: 2024, interet: 98.75 },
-                    { client: 'Petit Luc', pret: 'Prêt #1003', mois: 'Avril', annee: 2024, interet: 210.00 },
-                    { client: 'Dupont Jean', pret: 'Prêt #1001', mois: 'Juin', annee: 2024, interet: 80.00 },
-                    { client: 'Durand Alice', pret: 'Prêt #1002', mois: 'Juin', annee: 2024, interet: 50.00 },
-                    { client: 'Petit Luc', pret: 'Prêt #1003', mois: 'Mai', annee: 2024, interet: 60.00 },
-                ];
+                // Variables globales
+                let donneesBrutes = [];
+                let chart = null;
 
                 const moisMap = {
                     1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril', 5: 'Mai', 6: 'Juin',
@@ -354,8 +348,50 @@
                     return false;
                 }
 
-                // Affichage initial (tous les mois/années)
-                afficherTableau('', '', '', '');
+                // Charger les données depuis l'API
+                async function loadInteretsData() {
+                    try {
+                        const response = await fetch('/ws/api/prets');
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            // Transformer les données des prêts en données d'intérêts
+                            donneesBrutes = data.data.map(pret => {
+                                const datePret = new Date(pret.date_pret);
+                                const mois = datePret.getMonth() + 1; // getMonth() retourne 0-11
+                                const annee = datePret.getFullYear();
+                                
+                                // Calculer l'intérêt mensuel basé sur le taux et le montant
+                                const tauxMensuel = (pret.taux_annuel || 0) / 100 / 12;
+                                const interetMensuel = (pret.montant_emprunte || 0) * tauxMensuel;
+                                
+                                return {
+                                    client: `${pret.client_nom || 'N/A'} ${pret.client_prenom || ''}`,
+                                    pret: `Prêt #${pret.id}`,
+                                    mois: moisMap[mois],
+                                    annee: annee,
+                                    interet: interetMensuel
+                                };
+                            });
+                            
+                            // Affichage initial
+                            afficherTableau('', '', '', '');
+                        } else {
+                            console.error('Erreur:', data.message);
+                            document.getElementById('tableBody').innerHTML = 
+                                '<tr><td colspan="3" style="text-align: center; color: red;">Erreur lors du chargement des données</td></tr>';
+                        }
+                    } catch (error) {
+                        console.error('Erreur réseau:', error);
+                        document.getElementById('tableBody').innerHTML = 
+                            '<tr><td colspan="3" style="text-align: center; color: red;">Erreur de connexion</td></tr>';
+                    }
+                }
+
+                // Initialisation au chargement de la page
+                document.addEventListener('DOMContentLoaded', function() {
+                    loadInteretsData();
+                });
                 </script>
             </div>
         </main>

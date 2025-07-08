@@ -50,6 +50,11 @@ CREATE TABLE taux_pret (
     FOREIGN KEY (id_type_pret) REFERENCES type_pret(id)
 );
 
+CREATE TABLE taux_assurance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    taux DECIMAL(5, 2) NOT NULL
+);
+
 CREATE TABLE mode_remboursement (
     id INT AUTO_INCREMENT PRIMARY KEY,
     libelle VARCHAR(255) NOT NULL,
@@ -64,23 +69,27 @@ CREATE TABLE employes (
     password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE statut_pret (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    libelle VARCHAR(255) NOT NULL
-);
-
 CREATE TABLE pret (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_client INT NULL,
     id_employe INT NOT NULL,
     id_taux_pret INT NOT NULL,
     id_remboursement INT NOT NULL,
+    id_taux_assurance INT NOT NULL,
     montant_emprunte DECIMAL(8, 2) NOT NULL,
     date_pret DATE NOT NULL,
     FOREIGN KEY (id_client) REFERENCES clients(id),
     FOREIGN KEY (id_employe) REFERENCES employes(id),
     FOREIGN KEY (id_taux_pret) REFERENCES taux_pret(id),
-    FOREIGN KEY (id_remboursement) REFERENCES mode_remboursement(id)
+    FOREIGN KEY (id_remboursement) REFERENCES mode_remboursement(id),
+    FOREIGN KEY (id_taux_assurance) REFERENCES taux_assurance(id)
+);
+
+CREATE TABLE statut_pret (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    libelle VARCHAR(255) NOT NULL,
+    id_pret INT NOT NULL,
+    FOREIGN KEY (id_pret) REFERENCES pret(id)
 );
 
 CREATE TABLE remboursement (

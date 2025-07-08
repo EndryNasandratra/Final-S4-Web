@@ -134,7 +134,7 @@ class Engine {
             $this->dispatcher->set($name, array($this, '_'.$name));
         }
 
-        // Default configuration settings
+        // Default configuration Parametres
         $this->set('flight.base_url', null);
         $this->set('flight.case_sensitive', false);
         $this->set('flight.handle_errors', true);
