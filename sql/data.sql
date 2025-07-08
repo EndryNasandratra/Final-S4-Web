@@ -56,6 +56,7 @@ INSERT INTO taux_pret (id_type_pret, taux_annuel, duree, borne_inf, borne_sup) V
 (4, 3.50, 84, 50001, 75000);
 
 INSERT INTO taux_assurance (taux) VALUES
+(0.0),
 (0.25),
 (0.30),
 (0.35),
@@ -85,6 +86,33 @@ INSERT INTO statut_pret (libelle, id_pret) VALUES
 ('Valide', 3),
 ('Rembourse', 4),
 ('En attente', 5);
+
+
+-- Insertion des prêts validés
+INSERT INTO pret (id, id_client, id_employe, id_taux_pret, id_remboursement, id_taux_assurance, montant_emprunte, date_pret)
+VALUES (6, 1, 1, 2, 1, 2, 250000.00, '2023-04-01');
+
+INSERT INTO pret (id, id_client, id_employe, id_taux_pret, id_remboursement, id_taux_assurance, montant_emprunte, date_pret)
+VALUES (7, 2, 2, 4, 1, 1, 30000.00, '2023-04-10');
+
+INSERT INTO pret (id, id_client, id_employe, id_taux_pret, id_remboursement, id_taux_assurance, montant_emprunte, date_pret)
+VALUES (8, 3, 3, 6, 1, 1, 15000.00, '2023-05-01');
+
+INSERT INTO pret (id, id_client, id_employe, id_taux_pret, id_remboursement, id_taux_assurance, montant_emprunte, date_pret)
+VALUES (9, 5, 2, 8, 2, 3, 60000.00, '2023-05-15');
+
+INSERT INTO pret (id, id_client, id_employe, id_taux_pret, id_remboursement, id_taux_assurance, montant_emprunte, date_pret)
+VALUES (10, 4, 1, 9, 1, 2, 70000.00, '2023-06-01');
+
+-- Insertion des statuts associés
+INSERT INTO statut_pret (libelle, id_pret) VALUES ('Valide', 6);
+INSERT INTO statut_pret (libelle, id_pret) VALUES ('Valide', 7);
+INSERT INTO statut_pret (libelle, id_pret) VALUES ('Valide', 8);
+INSERT INTO statut_pret (libelle, id_pret) VALUES ('Valide', 9);
+INSERT INTO statut_pret (libelle, id_pret) VALUES ('Valide', 10);
+
+
+
 
 INSERT INTO remboursement (id_pret, montant_retour, date_retour) VALUES
 (1, 1000000.00, '2025-06-30'),
