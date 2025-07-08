@@ -13,6 +13,7 @@ Flight::route('GET /prets/@id', ['PretController', 'getById']);
 Flight::route('PUT /prets/@id/validate', ['PretController', 'validerPret']);
 Flight::route('PUT /prets/@id/reject', ['PretController', 'rejeterPret']);
 Flight::route('GET /prets/validated/filter', ['PretController', 'filterValidated']);
+Flight::route('GET /prets/montant-dispo-par-mois', ['PretController', 'getMontantDispoParMois']);
 
 // Routes pour les clients
 Flight::route('GET /clients', ['ClientController', 'getAll']);

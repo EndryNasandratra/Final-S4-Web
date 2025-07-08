@@ -191,6 +191,7 @@
             <a href="list_interet_mensuel.php">Interet mensuel</a>
             <a href="ajout_pret.php">Ajout de pret</a>
             <a href="simulateur_pret.php">Simulateur de pret</a>
+            <a href="montant_dispo.php">Solde mensuel</a>
             <a href="#">Deconnexion</a>
         </nav>
         <main class="main-content">
@@ -242,7 +243,7 @@
 
         // Fonction pour charger les prets valides avec filtres
         function loadValidatedPrets(filters = {}) {
-            let url = 'http://localhost/Final_S4_Web/ws/prets/validated/filter';
+            let url = '/Final_S4_Web/ws/prets/validated/filter';
             const params = new URLSearchParams(filters).toString();
             if (params) url += '?' + params;
 

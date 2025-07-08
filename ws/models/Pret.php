@@ -86,6 +86,22 @@ class Pret {
             // Creer un statut par defaut "En attente"
             $stmt = $db->prepare("INSERT INTO statut_pret (libelle, id_pret) VALUES (?, ?)");
             $stmt->execute(['En attente', $id]);
+
+            $stmt = $db->prepare("SELECT * FROM ressources WHERE id=1");
+            $stmt->execute();
+            $ressource = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$ressource) {
+                throw new Exception("Ressource non trouvee");
+            }
+
+            $new_value = $ressource['valeur'] - $data->montant_emprunte;
+
+            $stmt = $db->prepare("UPDATE ressources set valeur= $new_value WHERE id=1");
+            $stmt->execute();
+
+            $stmt = $db->prepare("INSERT INTO historique_ressource (id_ressource, valeur, date_historique) VALUES (1, $data->montant_emprunte, $data->date_pret)");
+            $stmt->execute();
             
             // Valider la transaction
             $db->commit();
@@ -204,6 +220,60 @@ class Pret {
         $stmt = $db->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Retourne le montant total a disposition de l'EF par mois (reste montant non emprunte + remboursements des clients)
+    public static function getMontantDispoParMois($dateDebut, $dateFin) {
+        $db = getDB();
+        // Generer la liste des mois entre dateDebut et dateFin
+        $start = new DateTime($dateDebut.'-01');
+        $end = new DateTime($dateFin.'-01');
+        $end->modify('last day of this month');
+        $months = [];
+        $period = new DatePeriod($start, new DateInterval('P1M'), (clone $end)->modify('+1 day'));
+        foreach ($period as $dt) {
+            $months[$dt->format('Y-m')] = [
+                'mois' => $dt->format('m'),
+                'annee' => $dt->format('Y'),
+                'total_non_emprunte' => 0,
+                'total_remboursements' => 0,
+                'total_dispo' => 0
+            ];
+        }
+        // 1. Montant total des ressources (fixe)
+        $sqlRess = "SELECT SUM(valeur) as total_ressources FROM ressources";
+        $rowRess = $db->query($sqlRess)->fetch(PDO::FETCH_ASSOC);
+        $totalRessources = $rowRess ? floatval($rowRess['total_ressources']) : 0;
+        // 2. Pour chaque mois, calculer le montant total emprunte jusqu'a la fin du mois
+        foreach ($months as $key => &$m) {
+            $finMois = $m['annee'] . '-' . $m['mois'] . '-31';
+            // Correction pour le dernier jour du mois
+            $finMoisObj = DateTime::createFromFormat('Y-m-d', $finMois);
+            if (!$finMoisObj) $finMoisObj = new DateTime($m['annee'] . '-' . $m['mois'] . '-01');
+            $finMoisObj->modify('last day of this month');
+            $finMois = $finMoisObj->format('Y-m-d');
+            // Montant total emprunte jusqu'a la fin du mois
+            $sqlPret = "SELECT SUM(montant_emprunte) as total_emprunte FROM pret WHERE date_pret <= :finMois";
+            $stmtPret = $db->prepare($sqlPret);
+            $stmtPret->execute([':finMois' => $finMois]);
+            $rowPret = $stmtPret->fetch(PDO::FETCH_ASSOC);
+            $totalEmprunte = $rowPret ? floatval($rowPret['total_emprunte']) : 0;
+            // Remboursements du mois
+            $sqlRemb = "SELECT SUM(montant_retour) as total_rembourse FROM remboursement WHERE date_retour >= :debutMois AND date_retour <= :finMois";
+            $debutMois = $m['annee'] . '-' . $m['mois'] . '-01';
+            $stmtRemb = $db->prepare($sqlRemb);
+            $stmtRemb->execute([
+                ':debutMois' => $debutMois,
+                ':finMois' => $finMois
+            ]);
+            $rowRemb = $stmtRemb->fetch(PDO::FETCH_ASSOC);
+            $totalRembourse = $rowRemb ? floatval($rowRemb['total_rembourse']) : 0;
+            // Calcul du solde mensuel
+            $m['total_non_emprunte'] = $totalRessources - $totalEmprunte;
+            $m['total_remboursements'] = $totalRembourse;
+            $m['total_dispo'] = $m['total_non_emprunte'] + $m['total_remboursements'];
+        }
+        return array_values($months);
     }
 }
 ?>

@@ -210,6 +210,7 @@
             <a href="list_interet_mensuel.php">Interet mensuel</a>
             <a href="ajout_pret.php">Ajout de pret</a>
             <a href="simulateur_pret.php">Simulateur de pret</a>
+            <a href="montant_dispo.php">Solde mensuel</a>
             <a href="#">Deconnexion</a>
         </nav>
         <main class="main-content">
@@ -261,7 +262,7 @@
     </div>
 
     <script>
-        const apiBase = "http://localhost/Final_S4_Web/ws";
+        const apiBase = "/Final_S4_Web/ws";
         const urlGetAllData = `${apiBase}/interets_mensuels`;
         const urlGetFilteredData = `${apiBase}/filtrer_interets_mensuels`;
 

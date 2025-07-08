@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulation de prêt</title>
+    <title>Simulation de pret</title>
     <style>
         body {
             margin: 0;
@@ -210,7 +210,7 @@
 
 <body>
     <div class="header">
-        <div class="logo">MNA_Banque</div> - Simulation de prêt
+        <div class="logo">MNA_Banque</div> - Simulation de pret
     </div>
     <div class="layout">
         <nav class="sidebar">
@@ -218,40 +218,41 @@
             <a href="../Ressources/settings.php">Parametres</a>
             <a href="validation_pret.php">Validation pret</a>
             <a href="list_interet_mensuel.php">Interet mensuel</a>
-            <a href="simulation_pret.php">Simulation de prêt</a>
-            <a href="#">Déconnexion</a>
+            <a href="simulation_pret.php">Simulation de pret</a>
+            <a href="montant_dispo.php">Solde mensuel</a>
+            <a href="#">Deconnexion</a>
         </nav>
         <main class="main-content">
             <div class="container">
-                <h2>Simulation de prêt</h2>
+                <h2>Simulation de pret</h2>
                 <form id="simulationForm">
                     <div class="form-section">
                         <div class="form-group">
-                            <label for="type_pret">Type de prêt</label>
+                            <label for="type_pret">Type de pret</label>
                             <select name="type_pret" id="type_pret" required onchange="loadDurees()">
-                                <option value="">Sélectionner un type de prêt</option>
+                                <option value="">Selectionner un type de pret</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="duree">Durée (années)</label>
+                            <label for="duree">Duree (annees)</label>
                             <select name="duree" id="duree" required onchange="loadTaux()">
-                                <option value="">Sélectionner la durée</option>
+                                <option value="">Selectionner la duree</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="montant">Montant emprunté (€)</label>
+                            <label for="montant">Montant emprunte (€)</label>
                             <input type="number" id="montant" name="montant" step="0.01" placeholder="10000" required onchange="validateMontant()">
                         </div>
                         <div class="form-group">
                             <label for="taux_assurance">Taux d'assurance</label>
                             <select name="taux_assurance" id="taux_assurance" required>
-                                <option value="">Sélectionner le taux d'assurance</option>
+                                <option value="">Selectionner le taux d'assurance</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="mode_remboursement">Mode de remboursement</label>
                             <select name="mode_remboursement" id="mode_remboursement" required>
-                                <option value="">Sélectionner</option>
+                                <option value="">Selectionner</option>
                                 <option value="1">Mensuel</option>
                                 <option value="2">Trimestriel</option>
                                 <option value="3">Semestriel</option>
@@ -261,13 +262,13 @@
                     </div>
 
                     <div class="simulation-results" id="simulationResults" style="display: none;">
-                        <h3>Résultats de la simulation</h3>
+                        <h3>Resultats de la simulation</h3>
                         <div class="result-item">
-                            <span>Montant emprunté :</span>
+                            <span>Montant emprunte :</span>
                             <span id="montant_emprunte">0.00 €</span>
                         </div>
                         <div class="result-item">
-                            <span>Durée :</span>
+                            <span>Duree :</span>
                             <span id="duree_affichage">0 ans</span>
                         </div>
                         <div class="result-item">
@@ -279,7 +280,7 @@
                             <span id="taux_assurance_affichage">0.00 %</span>
                         </div>
                         <div class="result-item">
-                            <span>Mensualité :</span>
+                            <span>Mensualite :</span>
                             <span id="mensualite">0.00 €</span>
                         </div>
                         <div class="result-item">
@@ -297,8 +298,8 @@
 
                     <div class="action-buttons">
                         <button type="button" class="btn btn-primary" onclick="calculerSimulation()">Calculer</button>
-                        <button type="button" class="btn btn-success" onclick="ajouterPret()">Ajouter le prêt</button>
-                        <button type="button" class="btn btn-secondary" onclick="genererPDF()">Générer PDF</button>
+                        <button type="button" class="btn btn-success" onclick="ajouterPret()">Ajouter le pret</button>
+                        <button type="button" class="btn btn-secondary" onclick="genererPDF()">Generer PDF</button>
                     </div>
                 </form>
             </div>
@@ -311,41 +312,41 @@
         let tauxAssurance = [];
         let currentSimulation = null;
 
-        // Charger les types de prêts au chargement de la page
+        // Charger les types de prets au chargement de la page
         async function loadTypesPret() {
             try {
-                const response = await fetch('/ws/api/types-pret');
+                const response = await fetch('/Final_S4_Web/ws/api/types-pret');
                 const data = await response.json();
 
                 if (data.success) {
                     typesPret = data.data;
                     const select = document.getElementById('type_pret');
-                    select.innerHTML = '<option value="">Sélectionner un type de prêt</option>';
+                    select.innerHTML = '<option value="">Selectionner un type de pret</option>';
 
                     typesPret.forEach(type => {
                         const option = document.createElement('option');
                         option.value = type.id;
-                        option.textContent = `${type.libelle} (max: ${type.montant_max}€, durée: ${type.duree_max}ans)`;
+                        option.textContent = `${type.libelle} (max: ${type.montant_max}€, duree: ${type.duree_max}ans)`;
                         select.appendChild(option);
                     });
                 }
             } catch (error) {
-                console.error('Erreur lors du chargement des types de prêt:', error);
+                console.error('Erreur lors du chargement des types de pret:', error);
             }
         }
 
-        // Charger les durées disponibles pour un type de prêt
+        // Charger les durees disponibles pour un type de pret
         async function loadDurees() {
             const typePretId = document.getElementById('type_pret').value;
             if (!typePretId) return;
 
             try {
-                const response = await fetch(`/ws/api/types-pret/${typePretId}/durees`);
+                const response = await fetch(`/Final_S4_Web/ws/api/types-pret/${typePretId}/durees`);
                 const data = await response.json();
 
                 if (data.success) {
                     const select = document.getElementById('duree');
-                    select.innerHTML = '<option value="">Sélectionner la durée</option>';
+                    select.innerHTML = '<option value="">Selectionner la duree</option>';
 
                     data.data.forEach(duree => {
                         const option = document.createElement('option');
@@ -355,20 +356,20 @@
                     });
                 }
             } catch (error) {
-                console.error('Erreur lors du chargement des durées:', error);
+                console.error('Erreur lors du chargement des durees:', error);
             }
         }
 
         // Charger les taux d'assurance
         async function loadTauxAssurance() {
             try {
-                const response = await fetch('/ws/api/taux-assurance');
+                const response = await fetch('/Final_S4_Web/ws/api/taux-assurance');
                 const data = await response.json();
 
                 if (data.success) {
                     tauxAssurance = data.data;
                     const select = document.getElementById('taux_assurance');
-                    select.innerHTML = '<option value="">Sélectionner le taux d\'assurance</option>';
+                    select.innerHTML = '<option value="">Selectionner le taux d\'assurance</option>';
 
                     tauxAssurance.forEach(taux => {
                         const option = document.createElement('option');
@@ -382,7 +383,7 @@
             }
         }
 
-        // Valider le montant selon le type de prêt
+        // Valider le montant selon le type de pret
         function validateMontant() {
             const typePretId = document.getElementById('type_pret').value;
             const montant = parseFloat(document.getElementById('montant').value);
@@ -390,7 +391,7 @@
             if (typePretId && montant) {
                 const typePret = typesPret.find(t => t.id == typePretId);
                 if (typePret && montant > typePret.montant_max) {
-                    alert(`Le montant maximum pour ce type de prêt est de ${typePret.montant_max}€`);
+                    alert(`Le montant maximum pour ce type de pret est de ${typePret.montant_max}€`);
                     document.getElementById('montant').value = typePret.montant_max;
                 }
             }
@@ -409,7 +410,7 @@
             }
 
             try {
-                const response = await fetch('/ws/api/prets/simuler', {
+                const response = await fetch('/Final_S4_Web/ws/api/prets/simuler', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -436,7 +437,7 @@
             }
         }
 
-        // Afficher les résultats de la simulation
+        // Afficher les resultats de la simulation
         function displaySimulation(simulation) {
             document.getElementById('montant_emprunte').textContent = formatCurrency(simulation.montant);
             document.getElementById('duree_affichage').textContent = simulation.duree + ' ans';
@@ -458,30 +459,30 @@
             }).format(amount || 0);
         }
 
-        // Ajouter le prêt
+        // Ajouter le pret
         function ajouterPret() {
             if (!currentSimulation) {
                 alert('Veuillez d\'abord calculer la simulation');
                 return;
             }
 
-            if (confirm('Êtes-vous sûr de vouloir ajouter ce prêt ?')) {
-                // Ici, on enverrait les données au serveur pour sauvegarder le prêt
-                alert('Prêt ajouté avec succès !');
-                // Redirection vers la liste des prêts
+            if (confirm('etes-vous sûr de vouloir ajouter ce pret ?')) {
+                // Ici, on enverrait les donnees au serveur pour sauvegarder le pret
+                alert('Pret ajoute avec succes !');
+                // Redirection vers la liste des prets
                 window.location.href = 'list_pret.php';
             }
         }
 
-        // Générer PDF
+        // Generer PDF
         function genererPDF() {
             if (!currentSimulation) {
                 alert('Veuillez d\'abord calculer la simulation');
                 return;
             }
 
-            // Ici, on appellerait une API pour générer le PDF
-            alert('Génération du PDF en cours...');
+            // Ici, on appellerait une API pour generer le PDF
+            alert('Generation du PDF en cours...');
             // window.open('generer_pdf.php?id_simulation=' + simulationId, '_blank');
         }
 

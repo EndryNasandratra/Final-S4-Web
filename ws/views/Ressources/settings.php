@@ -200,6 +200,7 @@
             <a href="../pret/list_interet_mensuel.php">Interet mensuel</a>
             <a href="../pret/ajout_pret.php">Ajout de pret</a>
             <a href="../pret/simulateur_pret.php">Simulateur de pret</a>
+            <a href="../pret/montant_dispo.php">Solde mensuel</a>
             <a href="#">Deconnexion</a>
         </nav>
         <main class="main-content">
@@ -287,7 +288,7 @@
         // Charger les types de ressources
         async function loadTypePret() {
             try {
-                const response = await fetch('http://localhost/Final_S4_Web/ws/type_pret');
+                const response = await fetch('/Final_S4_Web/ws/type_pret');
                 if (response.ok) {
                     const types = await response.json();
                     typePretSelect.innerHTML = '<option value="">Selectionnez un type de pret</option>';
@@ -308,7 +309,7 @@
 
         async function loadTypesRessource() {
             try {
-                const response = await fetch('http://localhost/Final_S4_Web/ws/types-ressource');
+                const response = await fetch('/Final_S4_Web/ws/types-ressource');
                 const data = await response.json();
                 
                 typesRessource = data;
@@ -329,7 +330,7 @@
         // Charger les ressources
         async function loadRessources() {
             try {
-                const response = await fetch('http://localhost/Final_S4_Web/ws/ressources');
+                const response = await fetch('/Final_S4_Web/ws/ressources');
                 const data = await response.json();
                 
                 ressources = data;
@@ -375,7 +376,7 @@
         // Charger les statistiques
         async function loadStatistics() {
             try {
-                const response = await fetch('http://localhost/Final_S4_Web/ws/ressources/total');
+                const response = await fetch('/Final_S4_Web/ws/ressources/total');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -414,7 +415,7 @@
             }
 
             try {
-                const response = await fetch('http://localhost/Final_S4_Web/ws/types-ressource', {
+                const response = await fetch('/Final_S4_Web/ws/types-ressource', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -451,7 +452,7 @@
             }
 
             try {
-                const response = await fetch('http://localhost/Final_S4_Web/ws/ressources', {
+                const response = await fetch('/Final_S4_Web/ws/ressources', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -488,7 +489,7 @@
             const montant_max = parseFloat(document.getElementById('montant_max').value);
 
             try {
-                const response = await fetch('http://localhost/Final_S4_Web/ws/addType_pret', {
+                const response = await fetch('/Final_S4_Web/ws/addType_pret', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -528,7 +529,7 @@
             const borne_sup = parseFloat(document.getElementById('borne_sup').value);
 
             try {
-                const response = await fetch('http://localhost/Final_S4_Web/ws/addTaux_pret', {
+                const response = await fetch('/Final_S4_Web/ws/addTaux_pret', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

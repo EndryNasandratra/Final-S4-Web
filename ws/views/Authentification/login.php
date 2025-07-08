@@ -138,13 +138,13 @@
       const formData = new FormData(this);
       const errorMessage = document.getElementById('error-message');
 
-      fetch('http://localhost/Final_S4_Web/ws/login', {
+      fetch('/Final_S4_Web/ws/login', {
           method: 'POST',
           body: formData
         })
 
         .then(response => {
-          if (!response.ok) throw new Error('Réponse HTTP non OK');
+          if (!response.ok) throw new Error('Reponse HTTP non OK');
           return response.json();
         })
         .then(data => {
@@ -156,7 +156,7 @@
           }
         })
         .catch(err => {
-          errorMessage.textContent = 'Erreur réseau ou JSON : ' + err.message;
+          errorMessage.textContent = 'Erreur reseau ou JSON : ' + err.message;
           errorMessage.style.display = 'block';
         });
     });

@@ -109,5 +109,14 @@ class PretController {
         $prets = Pret::filterValidated($filters);
         Flight::json($prets);
     }
+
+    // Retourne le montant total a disposition de l'EF par mois (reste montant non emprunte + remboursements des clients)
+    public static function getMontantDispoParMois() {
+        $data = Flight::request()->data;
+        $dateDebut = isset($data->dateDebut) ? $data->dateDebut : date('Y-m', strtotime('-1 year'));
+        $dateFin = isset($data->dateFin) ? $data->dateFin : date('Y-m');
+        $result = Pret::getMontantDispoParMois($dateDebut, $dateFin);
+        Flight::json($result);
+    }
 }
 ?>

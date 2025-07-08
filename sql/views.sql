@@ -20,3 +20,8 @@ INNER JOIN statut_pret sp ON p.id = sp.id_pret
 JOIN remboursement r ON p.id_remboursement = r.id
 WHERE sp.libelle = 'Valide'
 ORDER BY p.id, r.date_retour;
+
+
+SELECT SUM(montant_retour) as total_rembourse
+FROM remboursement
+WHERE date_retour >= '2025-05-01' AND date_retour <= '2025-05-31'
