@@ -1,14 +1,16 @@
 INSERT INTO clients (nom, prenom, email, password) VALUES
-('Dupont', 'Jean', 'jean.dupont@email.com', SHA2('password123', 256)),
-('Martin', 'Sophie', 'sophie.martin@email.com', SHA2('securepass', 256)),
-('Bernard', 'Pierre', 'pierre.bernard@email.com', SHA2('bernard123', 256)),
-('Petit', 'Marie', 'marie.petit@email.com', SHA2('marie2023', 256)),
-('Moreau', 'Luc', 'luc.moreau@email.com', SHA2('lucmoreau', 256));
+('Dupont', 'Jean', 'jean.dupont@email.com', 'password123'),
+('Martin', 'Sophie', 'sophie.martin@email.com', 'securepass'),
+('Bernard', 'Pierre', 'pierre.bernard@email.com', 'bernard123'),
+('Petit', 'Marie', 'marie.petit@email.com', 'marie2023'),
+('Moreau', 'Luc', 'luc.moreau@email.com', 'lucmoreau');
 
 INSERT INTO employes (nom, prenom, email, password) VALUES
-('Leroy', 'Thomas', 'thomas.leroy@banque.com', SHA2('emp123', 256)),
-('Roux', 'Isabelle', 'isabelle.roux@banque.com', SHA2('emp456', 256)),
-('Fournier', 'Nicolas', 'nicolas.fournier@banque.com', SHA2('emp789', 256));
+('Leroy', 'Thomas', 'thomas.leroy@banque.com', 'emp123'),
+('Roux', 'Isabelle', 'isabelle.roux@banque.com', 'emp456'),
+('Fournier', 'Nicolas', 'nicolas.fournier@banque.com', 'emp789');
+
+
 
 INSERT INTO type_ressource (libelle) VALUES
 ('Salaire'), -- Salaire
@@ -66,9 +68,9 @@ INSERT INTO mode_remboursement (libelle, frequence_par_mois) VALUES
 ('Semestriel', 6);
 
 INSERT INTO employes (nom, prenom, email, password) VALUES
-('Leroy', 'Thomas', 'thomas.leroy@banque.com', SHA2('emp123', 256)),
-('Roux', 'Isabelle', 'isabelle.roux@banque.com', SHA2('emp456', 256)),
-('Fournier', 'Nicolas', 'nicolas.fournier@banque.com', SHA2('emp789', 256));
+('Leroy', 'Thomas', 'thomas.leroy@banque.com', 'emp123'),
+('Roux', 'Isabelle', 'isabelle.roux@banque.com', 'emp456'),
+('Fournier', 'Nicolas', 'nicolas.fournier@banque.com', 'emp789');
 
 INSERT INTO pret (id_client, id_employe, id_taux_pret, id_remboursement, id_taux_assurance, montant_emprunte, date_pret) VALUES
 (1, 1, 1, 1, 1, 180000.00, '2023-01-15'),

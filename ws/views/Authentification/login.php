@@ -122,9 +122,9 @@
     <div id="error-message" style="color:red; display:none;"></div>
     <form id="login-form" method="POST" action="/login">
       <label for="username">Email</label>
-      <input type="email" name="email" placeholder="Email" required />
+      <input type="email" name="email" placeholder="Email" value="thomas.leroy@banque.com" required />
       <label for="password">Mot de passe</label>
-      <input type="password" name="password" placeholder="Mot de passe" required />
+      <input type="password" name="password" placeholder="Mot de passe" value="emp123" required />
       <button type="submit">Se connecter</button>
     </form>
   </div>
@@ -138,7 +138,7 @@
       const formData = new FormData(this);
       const errorMessage = document.getElementById('error-message');
 
-      fetch('http://localhost/ITU/S4/Final-S4-Web/ws/login', {
+      fetch('http://localhost/Final_S4_Web/ws/login', {
           method: 'POST',
           body: formData
         })

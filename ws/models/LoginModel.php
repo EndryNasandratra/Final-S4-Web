@@ -6,7 +6,7 @@ class LoginModel
     public static function validateUser($email, $password)
     {
         $db = getDB();
-        $stmt = $db->prepare("SELECT * FROM clients WHERE email = :email");
+        $stmt = $db->prepare("SELECT * FROM employes WHERE email = :email");
         $stmt->bindParam(':email', $email);
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
