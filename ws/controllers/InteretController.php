@@ -10,7 +10,7 @@ class InteretController
             $donnees = InteretModel::calculateInterestByMonth();
             Flight::json($donnees);
         } catch (Exception $e) {
-            Flight::json(['error' => 'Impossible de générer le rapport', 'details' => $e->getMessage()], 500);
+            Flight::json(['error' => 'Impossible de generer le rapport', 'details' => $e->getMessage()], 500);
         }
     }
     public static function getDetailedFilteredInterestsReport()
@@ -31,7 +31,7 @@ class InteretController
             Flight::json($donnees);
         } catch (Exception $e) {
             Flight::json([
-                'error' => 'Une erreur est survenue lors de la génération du rapport détaillé.',
+                'error' => 'Une erreur est survenue lors de la generation du rapport detaille.',
                 'details' => $e->getMessage()
             ], 500);
         }

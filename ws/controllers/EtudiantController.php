@@ -21,19 +21,19 @@ class EtudiantController
         $data = Flight::request()->data;
         $id = Etudiant::create($data);
         $dateFormatted = Utils::formatDate('2025-01-01');
-        Flight::json(['message' => 'Étudiant ajouté', 'id' => $id]);
+        Flight::json(['message' => 'etudiant ajoute', 'id' => $id]);
     }
 
     public static function update($id)
     {
         $data = Flight::request()->data;
         Etudiant::update($id, $data);
-        Flight::json(['message' => 'Étudiant modifié']);
+        Flight::json(['message' => 'etudiant modifie']);
     }
 
     public static function delete($id)
     {
         Etudiant::delete($id);
-        Flight::json(['message' => 'Étudiant supprimé']);
+        Flight::json(['message' => 'etudiant supprime']);
     }
 }

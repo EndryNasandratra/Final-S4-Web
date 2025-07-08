@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../models/SimulationModel.php';
+require_once __DIR__ . '/../models/AppModel.php';
 require_once __DIR__ . '/../models/PDFModel.php';
 
 class SimulationController
@@ -18,7 +19,7 @@ class SimulationController
         $duree_mois = $data['duree_mois'] ?? 0;
         $include_assurance = filter_var($data['include_assurance'] ?? false, FILTER_VALIDATE_BOOLEAN);
 
-        error_log("handleCalculation - include_assurance: " . ($include_assurance ? 'true' : 'false')); // Débogage
+        error_log("handleCalculation - include_assurance: " . ($include_assurance ? 'true' : 'false')); // Debogage
 
         try {
             $result = SimulationModel::calculerSimulation($id_taux_pret, $montant, $duree_mois, $include_assurance);
@@ -35,7 +36,16 @@ class SimulationController
             $result = SimulationModel::getAllTypePret();
             Flight::json($result);
         } catch (Exception $e) {
-            Flight::json(['error' => 'Erreur lors de la récupération des types de prêts : ' . $e->getMessage()], 500);
+            Flight::json(['error' => 'Erreur lors de la recuperation des types de prets : ' . $e->getMessage()], 500);
+        }
+    }
+    public static function getAllClients(){
+
+        try {
+            $result = AppModel::getAll("clients");
+            Flight::json($result);
+        } catch (Exception $e) {
+            Flight::json(['error' => 'Erreur lors de la recuperation des types de prets : ' . $e->getMessage()], 500);
         }
     }
 
@@ -46,7 +56,7 @@ class SimulationController
             $result = SimulationModel::getAllTauxPretById($id_type_pret);
             Flight::json($result);
         } catch (Exception $e) {
-            Flight::json(['error' => 'Erreur lors de la récupération des taux : ' . $e->getMessage()], 500);
+            Flight::json(['error' => 'Erreur lors de la recuperation des taux : ' . $e->getMessage()], 500);
         }
     }
 
@@ -97,7 +107,7 @@ class SimulationController
             $stmt->execute(['id_taux_pret' => $id_taux_pret]);
             $typePret = $stmt->fetch(PDO::FETCH_ASSOC);
             if (!$typePret) {
-                throw new Exception('Type de prêt non trouvé.', 400);
+                throw new Exception('Type de pret non trouve.', 400);
             }
 
             $stmt = $db->prepare('
@@ -108,7 +118,7 @@ class SimulationController
             $stmt->execute(['id_taux_pret' => $id_taux_pret]);
             $tauxPret = $stmt->fetch(PDO::FETCH_ASSOC);
             if (!$tauxPret) {
-                throw new Exception('Taux de prêt non trouvé.', 400);
+                throw new Exception('Taux de pret non trouve.', 400);
             }
 
             $stmt = $db->prepare('

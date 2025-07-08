@@ -107,7 +107,7 @@
             $columns = AppModel::getColumns($table_name);
 
             if (!isset($data['id'])) {
-                throw new \Exception("L'ID est requis pour mettre à jour un enregistrement.");
+                throw new \Exception("L'ID est requis pour mettre a jour un enregistrement.");
             }
             $setClause = [];
             $params = [];

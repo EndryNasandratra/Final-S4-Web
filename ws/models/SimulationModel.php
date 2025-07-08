@@ -27,7 +27,7 @@ class SimulationModel
     public static function calculerSimulation($id_taux_pret, $montant, $duree_mois, $include_assurance)
     {
         if (!$id_taux_pret || $montant <= 0 || $duree_mois <= 0) {
-            throw new Exception('Données invalides fournies.', 400);
+            throw new Exception('Donnees invalides fournies.', 400);
         }
 
         try {
@@ -41,7 +41,7 @@ class SimulationModel
             $taux_pret = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$taux_pret) {
-                throw new Exception('Taux de prêt non trouvé.', 400);
+                throw new Exception('Taux de pret non trouve.', 400);
             }
 
             $montant = (float) $montant;
@@ -83,7 +83,7 @@ class SimulationModel
     public static function validerPret($id_taux_pret, $montant, $duree_mois, $include_assurance)
     {
         if (!$id_taux_pret || $montant <= 0 || $duree_mois <= 0) {
-            throw new Exception('Données invalides fournies.', 400);
+            throw new Exception('Donnees invalides fournies.', 400);
         }
 
         try {
@@ -97,7 +97,7 @@ class SimulationModel
             $taux_pret = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$taux_pret) {
-                throw new Exception('Taux de prêt non trouvé.', 400);
+                throw new Exception('Taux de pret non trouve.', 400);
             }
 
             $montant = (float) $montant;
@@ -110,13 +110,13 @@ class SimulationModel
                 if ($taux_assurance && isset($taux_assurance['id'])) {
                     $id_taux_assurance = (int) $taux_assurance['id'];
                 } else {
-                    throw new Exception('Taux d\'assurance non trouvé.', 400);
+                    throw new Exception('Taux d\'assurance non trouve.', 400);
                 }
             } else {
                 $id_taux_assurance = 1;
             }
 
-            // Sélectionner la ressource par défaut (id_type_resssource = 1)
+            // Selectionner la ressource par defaut (id_type_resssource = 1)
             $id_type_ressource = 1;
             $stmt = $db->prepare('
                 SELECT id, valeur 
@@ -127,12 +127,12 @@ class SimulationModel
             $ressource = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$ressource) {
-                throw new Exception('Ressource par défaut non trouvée.', 400);
+                throw new Exception('Ressource par defaut non trouvee.', 400);
             }
 
             $newRessourceValue = $ressource['valeur'] - $montant;
             if ($newRessourceValue < 0) {
-                throw new Exception('Solde insuffisant pour la ressource par défaut.', 400);
+                throw new Exception('Solde insuffisant pour la ressource par defaut.', 400);
             }
 
             $now = new DateTime();
@@ -158,28 +158,35 @@ class SimulationModel
                 'id' => $ressource['id']
             ]);
 
+            $db->beginTransaction();
+
             $stmt = $db->prepare('
-                INSERT INTO pret (id_client, id_employe, id_taux_pret, id_remboursement, id_taux_assurance, id_statut_pret, montant_emprunte, date_pret)
-                VALUES (:id_client, :id_employe, :id_taux_pret, :id_remboursement, :id_taux_assurance, :id_statut_pret, :montant_emprunte, CURRENT_DATE)
+                INSERT INTO pret (id_client, id_employe, id_taux_pret, id_remboursement, id_taux_assurance, montant_emprunte, date_pret)
+                VALUES (:id_client, :id_employe, :id_taux_pret, :id_remboursement, :id_taux_assurance, :montant_emprunte, CURRENT_DATE)
             ');
             $stmt->execute([
                 'id_client' => 1, // Supposition : client fixe pour tests
-                'id_employe' => 1, // Supposition : employé fixe pour tests
+                'id_employe' => 1, // Supposition : employe fixe pour tests
                 'id_taux_pret' => $id_taux_pret,
                 'id_remboursement' => 1,
                 'id_taux_assurance' => $id_taux_assurance,
-                'id_statut_pret' => 2,
                 'montant_emprunte' => $montant
             ]);
 
             $pret_id = $db->lastInsertId();
+
+            $stmt = $db->prepare("INSERT INTO statut_pret (libelle, id_pret) VALUES (?, ?)");
+            $stmt->execute(['Valide', $pret_id]);
+            
+            // Valider la transaction
+            $db->commit();
 
             return [
                 'success' => true,
                 'pret_id' => $pret_id
             ];
         } catch (PDOException $e) {
-            throw new Exception('Erreur lors de la validation du prêt : ' . $e->getMessage(), 500);
+            throw new Exception('Erreur lors de la validation du pret : ' . $e->getMessage(), 500);
         }
     }
 

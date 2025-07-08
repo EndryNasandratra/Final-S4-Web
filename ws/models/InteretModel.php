@@ -4,7 +4,7 @@ require_once __DIR__ . '/AppModel.php';
 
 class InteretModel
 {
-    // formule : Intérêt_m = Capital_rest_du_(m-1) × (Taux_annuel / 12)
+    // formule : Interet_m = Capital_rest_du_(m-1) × (taux / 12)
     public static function calculateInterestByMonth()
     {
         $allRepayments = AppModel::getAll("v_interert_pret");
@@ -16,13 +16,13 @@ class InteretModel
             $id_pret = $repayment['id_pret'];
 
             if (!isset($capitalRestantParPret[$id_pret])) {
-                $capitalRestantParPret[$id_pret] = (float) $repayment['montant_emprunte'];
+                $capitalRestantParPret[$id_pret] = (float) $repayment['montant'];
             }
             $capitalAvantPaiement = $capitalRestantParPret[$id_pret];
-            $tauxMensuel = ($repayment['taux_annuel'] / 100) / 12;
+            $tauxMensuel = ($repayment['taux'] / 100) / 12;
             $interetDuMois = $capitalAvantPaiement * $tauxMensuel;
 
-            $capitalRembourse = $repayment['montant_retour'] - $interetDuMois;
+            $capitalRembourse = $repayment['montant'] - $interetDuMois;
             $capitalRestantParPret[$id_pret] -= $capitalRembourse;
 
             $cleMois = date('Y-m', strtotime($repayment['date_retour']));
@@ -45,7 +45,7 @@ class InteretModel
     ) {
         $baseSql = "SELECT * FROM v_interert_pret";
 
-        $whereConditions = ["id_statut_pret = 2"];
+        $whereConditions = [];
         $params = [];
 
         if (is_numeric($startYear) && is_numeric($startMonth)) {
@@ -73,12 +73,12 @@ class InteretModel
         foreach ($allRepayments as $repayment) {
             $id_pret = $repayment['id_pret'];
             if (!isset($capitalRestantParPret[$id_pret])) {
-                $capitalRestantParPret[$id_pret] = (float) $repayment['montant_emprunte'];
+                $capitalRestantParPret[$id_pret] = (float) $repayment['montant'];
             }
             $capitalAvantPaiement = $capitalRestantParPret[$id_pret];
-            $tauxMensuel = ($repayment['taux_annuel'] / 100) / 12;
+            $tauxMensuel = ($repayment['taux'] / 100) / 12;
             $interetDuMois = $capitalAvantPaiement * $tauxMensuel;
-            $capitalRembourse = $repayment['montant_retour'] - $interetDuMois;
+            $capitalRembourse = $repayment['montant'] - $interetDuMois;
             $capitalRestantParPret[$id_pret] -= $capitalRembourse;
             $cleMois = date('Y-m', strtotime($repayment['date_retour']));
             if (!isset($interetsParMois[$cleMois])) {

@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Liste des prêts</title>
+    <title>Liste des prets</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -142,6 +142,20 @@
         button:hover {
             background: #1d4ed8;
         }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+        }
+        .error {
+            color: #dc2626;
+            text-align: center;
+            padding: 1rem;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
         @media (max-width: 900px) {
             .layout {
                 flex-direction: column;
@@ -170,17 +184,18 @@
 <body>
 <div class="header"><div class="logo">MNA_Banque</div> - Gestion des ressources</div>
 <div class="layout">
-     <nav class="sidebar">
+             <nav class="sidebar">
             <a href="list_pret.php">Accueil</a>
             <a href="../Ressources/settings.php">Parametres</a>
             <a href="validation_pret.php">Validation pret</a>
             <a href="list_interet_mensuel.php">Interet mensuel</a>
-            <a href="simulation_pret.php">Simulation de prêt</a>
-            <a href="#">Déconnexion</a>
+            <a href="ajout_pret.php">Ajout de pret</a>
+            <a href="simulateur_pret.php">Simulateur de pret</a>
+            <a href="#">Deconnexion</a>
         </nav>
         <main class="main-content">
             <div class="container">
-                <h2>Liste des prêts</h2>
+                <h2>Liste des prets valides</h2>
                 <button type="button" class="filter-toggle-btn" onclick="toggleFilters()">Afficher les filtres</button>
                 <form method="get">
                     <div class="filters-block" id="filtersBlock">
@@ -189,8 +204,8 @@
                             <input type="text" name="client" id="client" placeholder="Client" value="">
                         </div>
                         <div class="filter-group">
-                            <label for="employe">Employé</label>
-                            <input type="text" name="employe" id="employe" placeholder="Employé" value="">
+                            <label for="employe">Employe</label>
+                            <input type="text" name="employe" id="employe" placeholder="Employe" value="">
                         </div>
                         <div class="filter-group">
                             <label for="taux">Taux</label>
@@ -205,51 +220,16 @@
                             <input type="date" name="date" id="date" value="">
                         </div>
                         <div class="filter-group">
-                            <label for="duree">Durée</label>
-                            <input type="text" name="duree" id="duree" placeholder="Durée" value="">
+                            <label for="duree">Duree</label>
+                            <input type="text" name="duree" id="duree" placeholder="Duree" value="">
                         </div>
                         <div class="filter-group">
                             <button type="submit">Filtrer</button>
                         </div>
                     </div>
-                    <table>
-                        <tr>
-                            <th>Client</th>
-                            <th>Employé</th>
-                            <th>Taux (%)</th>
-                            <th>Montant</th>
-                            <th>Date</th>
-                            <th>Durée</th>
-                            <th>Action</th>
-                        </tr>
-                        <tr>
-                            <td>Dupont Jean</td>
-                            <td>Martin Sophie</td>
-                            <td>3.5</td>
-                            <td>10000.00</td>
-                            <td>2024-06-01</td>
-                            <td>24</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Durand Alice</td>
-                            <td>Bernard Paul</td>
-                            <td>2.9</td>
-                            <td>5000.00</td>
-                            <td>2024-05-15</td>
-                            <td>12</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Petit Luc</td>
-                            <td>Leroy Emma</td>
-                            <td>4.1</td>
-                            <td>20000.00</td>
-                            <td>2024-04-20</td>
-                            <td>36</td>
-                            <td></td>
-                        </tr>
-                    </table>
+                    <div id="tableContainer">
+                        <div class="loading">Chargement des donnees...</div>
+                    </div>
                 </form>
             </div>
         </main>
@@ -259,6 +239,106 @@
             var filtersBlock = document.getElementById('filtersBlock');
             filtersBlock.classList.toggle('visible');
         }
+
+        // Fonction pour charger les donnees des prets valides
+        function loadValidatedPrets() {
+            fetch('http://localhost/Final_S4_Web/ws/prets/validated')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur reseau: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Donnees reçues:', data);
+                    console.log('Type de donnees:', typeof data);
+                    console.log('Est-ce un tableau?', Array.isArray(data));
+                    displayPrets(data);
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    document.getElementById('tableContainer').innerHTML = 
+                        '<div class="error">Erreur lors du chargement des donnees: ' + error.message + '</div>';
+                });
+        }
+
+        // Fonction pour afficher les prets dans le tableau
+        function displayPrets(prets) {
+            const tableContainer = document.getElementById('tableContainer');
+            
+            // Verifier si prets est un tableau
+            if (!Array.isArray(prets)) {
+                console.error('Les donnees reçues ne sont pas un tableau:', prets);
+                tableContainer.innerHTML = '<div class="error">Format de donnees incorrect. Attendu: tableau, reçu: ' + typeof prets + '</div>';
+                return;
+            }
+            
+            if (prets.length === 0) {
+                tableContainer.innerHTML = '<div class="loading">Aucun pret valide trouve</div>';
+                return;
+            }
+
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Employe</th>
+                            <th>Taux (%)</th>
+                            <th>Montant</th>
+                            <th>Date</th>
+                            <th>Duree</th>
+                            <th>Type de pret</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            prets.forEach(pret => {
+                const clientName = pret.client_nom && pret.client_prenom ? 
+                    pret.client_nom + ' ' + pret.client_prenom : 'N/A';
+                const employeName = pret.employe_nom + ' ' + pret.employe_prenom;
+                const formattedDate = new Date(pret.date_debut).toLocaleDateString('fr-FR');
+                const formattedMontant = parseFloat(pret.montant).toLocaleString('fr-FR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+
+                tableHTML += `
+                    <tr>
+                        <td>${clientName}</td>
+                        <td>${employeName}</td>
+                        <td>${pret.taux}</td>
+                        <td>${formattedMontant} €</td>
+                        <td>${formattedDate}</td>
+                        <td>${pret.duree} mois</td>
+                        <td>${pret.type_pret}</td>
+                        <td>
+                            <button onclick="viewPret(${pret.id})">Voir</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            tableContainer.innerHTML = tableHTML;
+        }
+
+        // Fonction pour voir les details d'un pret
+        function viewPret(id) {
+            // Redirection vers une page de details ou ouverture d'une modal
+            alert('Voir les details du pret ID: ' + id);
+        }
+
+        // Charger les donnees au chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadValidatedPrets();
+        });
     </script>
 </body>
 </html>

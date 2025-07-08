@@ -9,13 +9,13 @@
 <h1>Write</h1>
 <code>Write(<b>float</b> h, <b>string</b> txt [, <b>mixed</b> link])</code>
 <h2>Description</h2>
-Cette méthode imprime du texte à partir de la position courante. Lorsque la marge droite est
-atteinte (ou que le caractère \n est rencontré), un saut de ligne est effectué et le texte
-continue à partir de la marge gauche. Au retour de la méthode, la position courante est située
-juste à la fin du texte.
+Cette methode imprime du texte a partir de la position courante. Lorsque la marge droite est
+atteinte (ou que le caractere \n est rencontre), un saut de ligne est effectue et le texte
+continue a partir de la marge gauche. Au retour de la methode, la position courante est situee
+juste a la fin du texte.
 <br>
 Il est possible de mettre un lien sur le texte.
-<h2>Paramètres</h2>
+<h2>Parametres</h2>
 <dl class="param">
 <dt><code>h</code></dt>
 <dd>
@@ -23,19 +23,19 @@ Hauteur de la ligne.
 </dd>
 <dt><code>txt</code></dt>
 <dd>
-Chaîne à imprimer.
+Chaîne a imprimer.
 </dd>
 <dt><code>link</code></dt>
 <dd>
-URL ou identifiant retourné par AddLink().
+URL ou identifiant retourne par AddLink().
 </dd>
 </dl>
 <h2>Exemple</h2>
 <div class="doc-source">
-<pre><code>// Début en police normale
+<pre><code>// Debut en police normale
 $pdf-&gt;SetFont('Arial', '', 14);
 $pdf-&gt;Write(5, 'Visitez ');
-// Lien en bleu souligné
+// Lien en bleu souligne
 $pdf-&gt;SetTextColor(0, 0, 255);
 $pdf-&gt;SetFont('', 'U');
 $pdf-&gt;Write(5, 'www.fpdf.org', 'http://www.fpdf.org');</code></pre>

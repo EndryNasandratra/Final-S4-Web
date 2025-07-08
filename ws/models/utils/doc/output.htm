@@ -9,42 +9,42 @@
 <h1>Output</h1>
 <code><b>string</b> Output([<b>string</b> dest [, <b>string</b> name [, <b>boolean</b> isUTF8]]])</code>
 <h2>Description</h2>
-Envoie le document vers une destination donnée : navigateur, fichier ou chaîne de caractères.
-Dans le cas du navigateur, on peut utiliser le visualiseur PDF ou bien forcer le téléchargement.
+Envoie le document vers une destination donnee : navigateur, fichier ou chaîne de caracteres.
+Dans le cas du navigateur, on peut utiliser le visualiseur PDF ou bien forcer le telechargement.
 <br>
-La méthode commence par appeler Close() si nécessaire pour terminer le document.
-<h2>Paramètres</h2>
+La methode commence par appeler Close() si necessaire pour terminer le document.
+<h2>Parametres</h2>
 <dl class="param">
 <dt><code>dest</code></dt>
 <dd>
-Destination où envoyer le document. Le paramètre peut prendre les valeurs suivantes :
+Destination où envoyer le document. Le parametre peut prendre les valeurs suivantes :
 <ul>
-<li><code>I</code> : envoyer en inline au navigateur. Le visualiseur PDF est utilisé.</li>
-<li><code>D</code> : envoyer au navigateur en forçant le téléchargement, avec le nom indiqué dans <code>name</code>.</li>
-<li><code>F</code> : sauver dans un fichier local, avec le nom indiqué dans <code>name</code>
-(peut inclure un répertoire).</li>
+<li><code>I</code> : envoyer en inline au navigateur. Le visualiseur PDF est utilise.</li>
+<li><code>D</code> : envoyer au navigateur en forçant le telechargement, avec le nom indique dans <code>name</code>.</li>
+<li><code>F</code> : sauver dans un fichier local, avec le nom indique dans <code>name</code>
+(peut inclure un repertoire).</li>
 <li><code>S</code> : renvoyer le document sous forme de chaîne.</li>
 </ul>
-La valeur par défaut est <code>I</code>.
+La valeur par defaut est <code>I</code>.
 </dd>
 <dt><code>name</code></dt>
 <dd>
-Le nom du fichier. Il est ignoré dans le cas de la destination <code>S</code>.<br>
-La valeur par défaut est <code>doc.pdf</code>.
+Le nom du fichier. Il est ignore dans le cas de la destination <code>S</code>.<br>
+La valeur par defaut est <code>doc.pdf</code>.
 </dd>
 <dt><code>isUTF8</code></dt>
 <dd>
-Indique si <code>name</code> est encodé en ISO-8859-1 (<code>false</code>) ou en UTF-8 (<code>true</code>).<br>
-Ce paramètre est utilisé uniquement pour les destinations <code>I</code> et <code>D</code>.<br>
-La valeur par défaut est <code>false</code>.
+Indique si <code>name</code> est encode en ISO-8859-1 (<code>false</code>) ou en UTF-8 (<code>true</code>).<br>
+Ce parametre est utilise uniquement pour les destinations <code>I</code> et <code>D</code>.<br>
+La valeur par defaut est <code>false</code>.
 </dd>
 </dl>
 <h2>Exemple</h2>
-Enregistrement du document dans un répertoire local :
+Enregistrement du document dans un repertoire local :
 <div class="doc-source">
 <pre><code>$pdf-&gt;Output('F', 'reports/report.pdf');</code></pre>
 </div>
-Pour forcer un téléchargement :
+Pour forcer un telechargement :
 <div class="doc-source">
 <pre><code>$pdf-&gt;Output('D', 'report.pdf');</code></pre>
 </div>

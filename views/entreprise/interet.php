@@ -1,13 +1,13 @@
 <?php
-$api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
+$api_url = "http://localhost/Final_S4//ws";
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
     <meta charset="UTF-8">
-    <title>Rapport Dynamique des Intérêts Gagnés</title>
-    <!-- 1. AJOUT DE LA BIBLIOTHÈQUE CHART.JS -->
+    <title>Rapport Dynamique des Interets Gagnes</title>
+    <!-- 1. AJOUT DE LA BIBLIOTHeQUE CHART.JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
@@ -130,10 +130,10 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
 
 <body>
     <div class="report-container">
-        <h1>Rapport des Intérêts Gagnés par Mois</h1>
+        <h1>Rapport des Interets Gagnes par Mois</h1>
         <div class="filters">
             <div class="filter-group">
-                <label for="start-month">Date de début</label>
+                <label for="start-month">Date de debut</label>
                 <div style="display:flex; gap: 5px;">
                     <select id="start-month"><?php for ($m = 1; $m <= 12; $m++) echo "<option value='$m'>" . date('F', mktime(0, 0, 0, $m, 10)) . "</option>"; ?></select>
                     <input type="number" id="start-year" value="<?= date('Y') - 1 ?>" style="width: 80px;">
@@ -158,7 +158,7 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
             <thead>
                 <tr>
                     <th>Mois</th>
-                    <th>Intérêts Totaux Gagnés</th>
+                    <th>Interets Totaux Gagnes</th>
                 </tr>
             </thead>
             <tbody id="report-body">
@@ -186,7 +186,7 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
         let myChart = null;
 
         function showLoading() {
-            reportBody.innerHTML = `<tr><td colspan="2" class="loading-message">Chargement des données...</td></tr>`;
+            reportBody.innerHTML = `<tr><td colspan="2" class="loading-message">Chargement des donnees...</td></tr>`;
             reportFoot.innerHTML = '';
             chartWrapper.style.display = 'none'; // Cacher le graphique pendant le chargement
         }
@@ -220,17 +220,17 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
                 })
                 .then(data => displayReport(data))
                 .catch(error => {
-                    reportBody.innerHTML = `<tr><td colspan="2" class="error-message">Impossible de charger le rapport filtré.</td></tr>`;
+                    reportBody.innerHTML = `<tr><td colspan="2" class="error-message">Impossible de charger le rapport filtre.</td></tr>`;
                 });
         }
 
         function displayReport(data) {
-            // -- Partie Tableau (inchangée) --
+            // -- Partie Tableau (inchangee) --
             reportBody.innerHTML = '';
             reportFoot.innerHTML = '';
 
             if (Object.keys(data).length === 0) {
-                reportBody.innerHTML = `<tr><td colspan="2" class="loading-message">Aucune donnée à afficher pour la période sélectionnée.</td></tr>`;
+                reportBody.innerHTML = `<tr><td colspan="2" class="loading-message">Aucune donnee a afficher pour la periode selectionnee.</td></tr>`;
                 chartWrapper.style.display = 'none';
                 return;
             }
@@ -246,7 +246,7 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
                 currency: 'EUR'
             });
 
-            // Préparer les données pour le graphique
+            // Preparer les donnees pour le graphique
             const chartLabels = [];
             const chartDataPoints = [];
 
@@ -267,11 +267,11 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
 
             const totalRow = document.createElement('tr');
             totalRow.className = 'total-row';
-            totalRow.innerHTML = `<td>Total Général</td><td>${currencyFormatter.format(totalGeneral)}</td>`;
+            totalRow.innerHTML = `<td>Total General</td><td>${currencyFormatter.format(totalGeneral)}</td>`;
             reportFoot.appendChild(totalRow);
 
             // -- Partie Graphique --
-            // Détruire l'ancien graphique s'il existe (très important lors du filtrage)
+            // Detruire l'ancien graphique s'il existe (tres important lors du filtrage)
             if (myChart) {
                 myChart.destroy();
             }
@@ -282,7 +282,7 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
                 data: {
                     labels: chartLabels,
                     datasets: [{
-                        label: 'Intérêts Gagnés',
+                        label: 'Interets Gagnes',
                         data: chartDataPoints,
                         backgroundColor: 'rgba(54, 162, 235, 0.6)',
                         borderColor: 'rgba(54, 162, 235, 1)',

@@ -8,7 +8,7 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
 <head>
     <meta charset="UTF-8" />
     <title>Ajouter une Ressource</title>
-    <!-- Le style est une copie exacte de votre fichier précédent pour la cohérence -->
+    <!-- Le style est une copie exacte de votre fichier precedent pour la coherence -->
     <style>
         body {
             font-family: sans-serif;
@@ -55,7 +55,7 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
 
 <body>
     <div class="container">
-        <a href="../.."> ← Retour à la liste</a>
+        <a href="../.."> ← Retour a la liste</a>
         <h1>Ajouter une nouvelle ressource</h1>
 
         <div>
@@ -95,7 +95,7 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
         }
 
         function chargerTypesRessources() {
-            ajax("GET", "/all_type_ressources", null, (data) => { // <-- VÉRIFIEZ CETTE LIGNE
+            ajax("GET", "/all_type_ressources", null, (data) => { // <-- VeRIFIEZ CETTE LIGNE
                 const select = document.getElementById("id_type_ressource");
                 select.innerHTML = '<option value="" disabled selected>-- Choisissez un type --</option>';
 
@@ -125,7 +125,7 @@ $api_url = "http://localhost/S4_WEB/Final_S4/Final_S4_Web/ws";
             const data = `id_type_ressource=${id_type_ressource}&valeur=${valeur}`;
 
             ajax("POST", "/create_ressource", data, (response) => {
-                alert(response.message || "Ressource ajoutée avec succès !");
+                alert(response.message || "Ressource ajoutee avec succes !");
                 resetForm();
             });
         }

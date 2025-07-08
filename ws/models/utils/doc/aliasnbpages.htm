@@ -9,13 +9,13 @@
 <h1>AliasNbPages</h1>
 <code>AliasNbPages([<b>string</b> alias])</code>
 <h2>Description</h2>
-Définit un alias pour le nombre total de pages. Cet alias sera substitué lors de la fermeture
+Definit un alias pour le nombre total de pages. Cet alias sera substitue lors de la fermeture
 du document.
-<h2>Paramètres</h2>
+<h2>Parametres</h2>
 <dl class="param">
 <dt><code>alias</code></dt>
 <dd>
-L'alias. Valeur par défaut : <code>{nb}</code>.
+L'alias. Valeur par defaut : <code>{nb}</code>.
 </dd>
 </dl>
 <h2>Exemple</h2>
@@ -24,11 +24,11 @@ L'alias. Valeur par défaut : <code>{nb}</code>.
 {
     function Footer()
     {
-        // Positionnement à 1,5 cm du bas
+        // Positionnement a 1,5 cm du bas
         $this-&gt;SetY(-15);
         // Police Arial italique 8
         $this-&gt;SetFont('Arial', 'I', 8);
-        // Numéro et nombre de pages
+        // Numero et nombre de pages
         $this-&gt;Cell(0, 10, 'Page '.$this-&gt;PageNo().'/{nb}', 0, 0, 'C');
     }
 }

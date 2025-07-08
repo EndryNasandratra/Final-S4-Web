@@ -9,14 +9,14 @@
 <h1>AcceptPageBreak</h1>
 <code><b>boolean</b> AcceptPageBreak()</code>
 <h2>Description</h2>
-Lorsqu'une condition de saut de page est remplie, la méthode est appelée, et en fonction de la
-valeur de retour, le saut est effectué ou non. L'implémentation par défaut renvoie une valeur
-selon le mode sélectionné par SetAutoPageBreak().
+Lorsqu'une condition de saut de page est remplie, la methode est appelee, et en fonction de la
+valeur de retour, le saut est effectue ou non. L'implementation par defaut renvoie une valeur
+selon le mode selectionne par SetAutoPageBreak().
 <br>
-Cette méthode est appelée automatiquement et ne devrait donc pas être appelée directement par
+Cette methode est appelee automatiquement et ne devrait donc pas etre appelee directement par
 l'application.
 <h2>Exemple</h2>
-La méthode est redéfinie dans une classe dérivée afin d'obtenir un formatage sur 3 colonnes :
+La methode est redefinie dans une classe derivee afin d'obtenir un formatage sur 3 colonnes :
 <div class="doc-source">
 <pre><code>class PDF extends FPDF
 {
@@ -35,14 +35,14 @@ La méthode est redéfinie dans une classe dérivée afin d'obtenir un formatage
     {
         if($this-&gt;col&lt;2)
         {
-            // Aller à la colonne suivante
+            // Aller a la colonne suivante
             $this-&gt;SetCol($this-&gt;col+1);
             $this-&gt;SetY(10);
             return false;
         }
         else
         {
-            // Retour en première colonne et saut de page
+            // Retour en premiere colonne et saut de page
             $this-&gt;SetCol(0);
             return true;
         }

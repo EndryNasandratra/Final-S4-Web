@@ -1,16 +1,55 @@
 <?php
-
 require_once __DIR__ . '/../models/AppModel.php';
-require_once __DIR__ . '/../helpers/Utils.php';
+require_once __DIR__ . '/../models/Ressource.php';
+
 class RessourceController
 {
+    public static function getAll()
+    {
+        $ressources = Ressource::getAll();
+        Flight::json($ressources);
+    }
+
+    public static function getById($id)
+    {
+        $ressource = Ressource::getById($id);
+        Flight::json($ressource);
+    }
+
+    public static function create()
+    {
+        $data = Flight::request()->data;
+
+        if (empty($data->id_type_ressource) || empty($data->valeur)) {
+            Flight::json(['error' => 'Le type et la valeur sont obligatoires'], 400);
+            return;
+        }
+
+        try {
+            $ressource = Ressource::create($data);
+            Flight::json(['success' => true, 'data' => $ressource], 201);
+        } catch (Exception $e) {
+            Flight::json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public static function getTotal()
+    {
+        try {
+            $total = Ressource::getTotal();
+            Flight::json(['success' => true, 'data' => ['total' => $total]]);
+        } catch (Exception $e) {
+            Flight::json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     public static function displayFormCreationRessource()
     {
         try {
             $types = AppModel::getAll('type_ressource');
             Flight::json($types);
         } catch (Exception $e) {
-            Flight::json(['error' => 'Impossible de récupérer les types de ressources', 'message' => $e->getMessage()], 500);
+            Flight::json(['error' => 'Impossible de recuperer les types de ressources', 'message' => $e->getMessage()], 500);
         }
     }
     public static function createRessource()
@@ -18,7 +57,7 @@ class RessourceController
         $data = Flight::request()->data;
 
         if (empty($data->id_type_ressource) || !isset($data->valeur)) {
-            Flight::json(['error' => 'Données manquantes.'], 400);
+            Flight::json(['error' => 'Donnees manquantes.'], 400);
             return;
         }
         try {
@@ -35,9 +74,9 @@ class RessourceController
 
             AppModel::update("ressources", ["valeur" => $newRessouceValue, "id" => $ressource["id"]], "id");
 
-            Flight::json(['status' => 'success', 'message' => 'Ressource ajoutée avec succès !'], 201);
+            Flight::json(['status' => 'success', 'message' => 'Ressource ajoutee avec succes !'], 201);
         } catch (Exception $e) {
-            Flight::json(['error' => 'Erreur lors de la création de la ressource', 'message' => $e->getMessage()], 500);
+            Flight::json(['error' => 'Erreur lors de la creation de la ressource', 'message' => $e->getMessage()], 500);
         }
     }
     public static function diminuerRessource($montant)
@@ -59,6 +98,6 @@ class RessourceController
 
         AppModel::update("ressources", ["valeur" => $newRessouceValue, "id" => $ressource["id"]], "id");
 
-        Flight::json(['status' => 'success', 'message' => 'Ressource ajoutée avec succès !'], 201);
+        Flight::json(['status' => 'success', 'message' => 'Ressource ajoutee avec succes !'], 201);
     }
 }

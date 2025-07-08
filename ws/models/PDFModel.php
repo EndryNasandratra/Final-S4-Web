@@ -17,7 +17,7 @@ class PDFModel extends FPDF
 
         $this->AddPage();
 
-        // En-tête
+        // En-tete
         $this->SetFont('Arial', 'B', 16);
         $this->Cell(0, 10, 'Simulation de Pret', 0, 1, 'C');
         $this->SetFont('Arial', '', 12);
@@ -29,7 +29,7 @@ class PDFModel extends FPDF
         $this->Cell(0, 10, 'Details de la Simulation', 0, 1, 'C');
         $this->Ln(5);
 
-        // En-têtes du tableau
+        // En-tetes du tableau
         $this->SetFont('Arial', 'B', 10);
         $headers = ['Description', 'Valeur'];
         $widths = [100, 80];
@@ -38,7 +38,7 @@ class PDFModel extends FPDF
         }
         $this->Ln();
 
-        // Données du tableau
+        // Donnees du tableau
         $this->SetFont('Arial', '', 10);
         $rows = [
             ['Type de pret', $typePret['libelle']],
