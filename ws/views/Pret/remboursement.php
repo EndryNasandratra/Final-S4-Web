@@ -181,12 +181,15 @@
     <div class="layout">
         <nav class="sidebar">
             <a href="list_pret.php">Accueil</a>
-            <a href="../Ressources/settings.php">Paramètres</a>
-            <a href="validation_pret.php">Validation prêt</a>
-            <a href="list_interet_mensuel.php">Intérêt mensuel</a>
-            <a href="ajout_pret.php">Ajout de prêt</a>
-            <a href="simulateur_pret.php">Simulateur de prêt</a>
+            <a href="../Ressources/settings.php">Parametres</a>
+            <a href="validation_pret.php">Validation pret</a>
+            <a href="list_interet_mensuel.php">Interet mensuel</a>
+            <a href="ajout_pret.php">Ajout de pret</a>
+            <a href="simulateur_pret.php">Simulateur de pret</a>
+            <a href="formSimuler.php">Simulateur pour un apreçu de pret</a>
+            <a href="comparerSimulation.php">Comparer les simulations enregistés</a>
             <a href="remboursement.php">Remboursement</a>
+            <a href="montant_dispo.php">Solde mensuel</a>
             <a href="#">Déconnexion</a>
         </nav>
         <main class="main-content">
@@ -278,7 +281,10 @@
                 const endMonth = (year === dateRetour.getFullYear()) ? dateRetour.getMonth() : 11;
 
                 for (let month = startMonth; month <= endMonth; month++) {
-                    const monthName = new Date(year, month, 1).toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
+                    const monthName = new Date(year, month, 1).toLocaleString('fr-FR', {
+                        month: 'long',
+                        year: 'numeric'
+                    });
                     const option = document.createElement('option');
                     option.value = `${year}-${month + 1}`; // Format YYYY-MM
                     option.textContent = monthName;

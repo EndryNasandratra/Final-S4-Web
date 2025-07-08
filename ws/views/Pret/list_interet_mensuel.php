@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <title>Rapport Dynamique des Interets Gagnes</title>
@@ -12,6 +13,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
         }
+
         .header {
             background: #2563eb;
             color: #fff;
@@ -21,6 +23,7 @@
             padding: 0 1.5rem;
             font-size: 1.2rem;
         }
+
         .logo {
             font-size: 2rem;
             font-weight: bold;
@@ -30,10 +33,12 @@
             letter-spacing: 2px;
             text-shadow: 1px 2px 8px #e0e7ff;
         }
+
         .layout {
             display: flex;
             min-height: calc(100vh - 56px);
         }
+
         .sidebar {
             background: #1e293b;
             color: #fff;
@@ -41,6 +46,7 @@
             padding: 1.5rem 1rem;
             box-sizing: border-box;
         }
+
         .sidebar a {
             color: #fff;
             text-decoration: none;
@@ -49,24 +55,28 @@
             padding: 0.5rem 0.8rem;
             border-radius: 4px;
         }
+
         .sidebar a:hover {
             background: #2563eb;
         }
+
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
             background: #f8fafc;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
             padding: 2rem;
             gap: 2rem;
         }
+
         .main-title {
             color: #2563eb;
             margin-bottom: 1rem;
             font-size: 1.5rem;
             text-align: center;
         }
+
         .report-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -75,6 +85,7 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
             padding: 2rem;
         }
+
         .filters {
             display: flex;
             flex-wrap: wrap;
@@ -86,16 +97,19 @@
             border-radius: 8px;
             border: 1px solid #cbd5e1;
         }
+
         .filter-group {
             display: flex;
             flex-direction: column;
         }
+
         .filter-group label {
             font-size: 0.9rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: #1e293b;
         }
+
         .filter-group select,
         .filter-group input {
             padding: 0.8rem;
@@ -103,12 +117,14 @@
             border: 1px solid #cbd5e1;
             font-size: 1rem;
         }
+
         .filter-group select:focus,
         .filter-group input:focus {
             outline: none;
             border-color: #2563eb;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
+
         .filters button {
             padding: 0.8rem 1.5rem;
             border: none;
@@ -119,9 +135,11 @@
             font-weight: 500;
             height: fit-content;
         }
+
         .filters button:hover {
             background: #1d4ed8;
         }
+
         .chart-container {
             position: relative;
             height: 400px;
@@ -132,35 +150,44 @@
             padding: 1.5rem;
             border: 1px solid #cbd5e1;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 1rem;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #cbd5e1;
             padding: 1rem;
             text-align: left;
         }
+
         th {
             background: #e0e7ff;
             color: #2563eb;
             font-weight: 600;
         }
+
         tr:nth-child(even) {
             background: #f8fafc;
         }
+
         tfoot {
             font-weight: bold;
         }
+
         .total-row td {
             background: #e0e7ff;
             text-align: right;
             font-weight: bold;
         }
+
         .total-row td:first-child {
             text-align: left;
         }
+
         .loading-message,
         .error-message {
             text-align: center;
@@ -168,15 +195,18 @@
             font-style: italic;
             padding: 2rem;
         }
+
         .error-message {
             color: #dc2626;
             background: #fee2e2;
             border-radius: 4px;
         }
+
         @media (max-width: 768px) {
             .layout {
                 flex-direction: column;
             }
+
             .sidebar {
                 width: 100%;
                 padding: 1rem;
@@ -185,19 +215,23 @@
                 gap: 1rem;
                 justify-content: center;
             }
+
             .main-content {
                 padding: 1rem;
             }
+
             .filters {
                 flex-direction: column;
                 gap: 1rem;
             }
+
             .chart-container {
                 height: 300px;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <div class="logo">MNA_Banque</div> - Rapport des Interets Gagnes
@@ -210,12 +244,14 @@
             <a href="list_interet_mensuel.php">Interet mensuel</a>
             <a href="ajout_pret.php">Ajout de pret</a>
             <a href="simulateur_pret.php">Simulateur de pret</a>
+            <a href="montant_dispo.php">Solde mensuel</a>
+            <a href="formSimuler.php">Simulateur pour un apreçu de pret</a>
             <a href="remboursement.php">Remboursement</a>
             <a href="#">Deconnexion</a>
         </nav>
         <main class="main-content">
             <h1 class="main-title">Rapport des Interets Gagnes par Mois</h1>
-            
+
             <div class="report-container">
                 <div class="filters">
                     <div class="filter-group">
@@ -416,4 +452,5 @@
         filterButton.addEventListener('click', fetchFilteredData);
     </script>
 </body>
+
 </html>

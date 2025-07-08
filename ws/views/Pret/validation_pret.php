@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
         }
+
         .header {
             background: #2563eb;
             color: #fff;
@@ -19,6 +21,7 @@
             padding: 0 1.5rem;
             font-size: 1.2rem;
         }
+
         .logo {
             font-size: 2rem;
             font-weight: bold;
@@ -28,10 +31,12 @@
             letter-spacing: 2px;
             text-shadow: 1px 2px 8px #e0e7ff;
         }
+
         .layout {
             display: flex;
             min-height: calc(100vh - 56px);
         }
+
         .sidebar {
             background: #1e293b;
             color: #fff;
@@ -39,6 +44,7 @@
             padding: 1.5rem 1rem;
             box-sizing: border-box;
         }
+
         .sidebar a {
             color: #fff;
             text-decoration: none;
@@ -47,18 +53,21 @@
             padding: 0.5rem 0.8rem;
             border-radius: 4px;
         }
+
         .sidebar a:hover {
             background: #2563eb;
         }
+
         .main-content {
             flex: 1;
             display: flex;
             align-items: flex-start;
             justify-content: center;
             background: #f8fafc;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
             padding: 2rem 0;
         }
+
         .container {
             background: #fff;
             border: 1px solid #cbd5e1;
@@ -67,28 +76,35 @@
             min-width: 95%;
             box-sizing: border-box;
         }
+
         h2 {
             color: #2563eb;
             margin-bottom: 1.2rem;
             font-size: 1.2rem;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 1rem;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #cbd5e1;
             padding: 0.7rem;
             text-align: left;
         }
+
         th {
             background: #e0e7ff;
             color: #2563eb;
         }
+
         tr:nth-child(even) {
             background: #f1f5f9;
         }
+
         .btn {
             padding: 0.5rem 1rem;
             border: none;
@@ -97,27 +113,34 @@
             cursor: pointer;
             margin-right: 0.5rem;
         }
+
         .btn-success {
             background: #059669;
             color: #fff;
         }
+
         .btn-success:hover {
             background: #047857;
         }
+
         .btn-danger {
             background: #dc2626;
             color: #fff;
         }
+
         .btn-danger:hover {
             background: #b91c1c;
         }
+
         .btn-info {
             background: #0891b2;
             color: #fff;
         }
+
         .btn-info:hover {
             background: #0e7490;
         }
+
         .status-pending {
             background: #fef3c7;
             color: #92400e;
@@ -126,11 +149,13 @@
             font-size: 0.8rem;
             font-weight: 500;
         }
+
         .loading {
             text-align: center;
             padding: 2rem;
             color: #64748b;
         }
+
         .error {
             color: #dc2626;
             text-align: center;
@@ -140,10 +165,12 @@
             border-radius: 4px;
             margin: 1rem 0;
         }
+
         @media (max-width: 900px) {
             .layout {
                 flex-direction: column;
             }
+
             .sidebar {
                 width: 100%;
                 padding: 1rem;
@@ -152,22 +179,28 @@
                 gap: 1rem;
                 justify-content: center;
             }
+
             .main-content {
                 padding: 1rem 0;
             }
+
             .container {
                 min-width: 99vw;
             }
         }
     </style>
 </head>
+
 <body>
-    <div class="header"><div class="logo">MNA_Banque</div> - Validation des prets</div>
+    <div class="header">
+        <div class="logo">MNA_Banque</div> - Validation des prets
+    </div>
     <div class="layout">
         <nav class="sidebar">
             <a href="list_pret.php">Accueil</a>
             <a href="../Ressources/settings.php">Parametres</a>
             <a href="validation_pret.php">Validation pret</a>
+            <a href="montant_dispo.php">Solde mensuel</a>
             <a href="list_interet_mensuel.php">Interet mensuel</a>
             <a href="ajout_pret.php">Ajout de pret</a>
             <a href="simulateur_pret.php">Simulateur de pret</a>
@@ -183,23 +216,23 @@
             </div>
         </main>
     </div>
-    
+
     <script>
         // Charger les prets en attente
         async function loadPendingPrets() {
             try {
                 const response = await fetch('http://localhost/Final_S4_Web/ws/prets/not-validated');
                 const data = await response.json();
-                
+
                 if (Array.isArray(data)) {
                     displayPrets(data);
                 } else {
-                    document.getElementById('tableContainer').innerHTML = 
+                    document.getElementById('tableContainer').innerHTML =
                         '<div class="error">Erreur lors du chargement des donnees</div>';
                 }
             } catch (error) {
                 console.error('Erreur:', error);
-                document.getElementById('tableContainer').innerHTML = 
+                document.getElementById('tableContainer').innerHTML =
                     '<div class="error">Erreur lors du chargement des donnees: ' + error.message + '</div>';
             }
         }
@@ -207,7 +240,7 @@
         // Afficher les prets dans le tableau
         function displayPrets(prets) {
             const tableContainer = document.getElementById('tableContainer');
-            
+
             if (prets.length === 0) {
                 tableContainer.innerHTML = '<div class="loading">Aucun pret en attente de validation</div>';
                 return;
@@ -233,7 +266,7 @@
 
             prets.forEach(pret => {
                 const numeroPret = `PRT-${pret.id.toString().padStart(6, '0')}`;
-                const clientName = pret.client_nom && pret.client_prenom ? 
+                const clientName = pret.client_nom && pret.client_prenom ?
                     pret.client_nom + ' ' + pret.client_prenom : 'N/A';
                 const employeName = pret.employe_nom + ' ' + pret.employe_prenom;
                 const formattedDate = new Date(pret.date_debut).toLocaleDateString('fr-FR');
@@ -272,7 +305,7 @@
             alert('Affichage des details du pret ID: ' + pretId);
             // Ici, on pourrait ouvrir une modal ou rediriger vers une page de details
         }
-        
+
         async function validerPret(pretId) {
             if (confirm('etes-vous sûr de vouloir valider ce pret ?')) {
                 try {
@@ -284,7 +317,7 @@
                     });
 
                     const result = await response.json();
-                    
+
                     if (response.ok && result.success) {
                         alert('Pret valide avec succes !');
                         // Recharger la liste des prets en attente
@@ -298,7 +331,7 @@
                 }
             }
         }
-        
+
         async function rejeterPret(pretId) {
             const raison = prompt('Veuillez indiquer la raison du rejet :');
             if (raison !== null && raison.trim() !== '') {
@@ -315,7 +348,7 @@
                         });
 
                         const result = await response.json();
-                        
+
                         if (response.ok && result.success) {
                             alert('Pret rejete avec succes !');
                             // Recharger la liste des prets en attente
@@ -339,4 +372,5 @@
         });
     </script>
 </body>
+
 </html>
