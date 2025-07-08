@@ -9,6 +9,7 @@ require 'routes/interet_routes.php';
 require 'routes/simulateur_route.php';
 require 'routes/app_routes.php';
 require 'routes/login_routes.php';
+require 'routes/remboursement_routes.php';
 
 Flight::start();
 
