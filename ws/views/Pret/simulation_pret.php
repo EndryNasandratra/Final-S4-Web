@@ -218,9 +218,9 @@
             <a href="../Ressources/settings.php">Parametres</a>
             <a href="validation_pret.php">Validation pret</a>
             <a href="list_interet_mensuel.php">Interet mensuel</a>
-            <a href="simulation_pret.php">Simulation de pret</a>
-            <a href="montant_dispo.php">Solde mensuel</a>
-            <a href="#">Deconnexion</a>
+            <a href="simulation_pret.php">Simulation de prêt</a>
+            <a href="remboursement.php">Remboursement</a>
+            <a href="#">Déconnexion</a>
         </nav>
         <main class="main-content">
             <div class="container">

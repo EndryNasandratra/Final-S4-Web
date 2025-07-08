@@ -191,8 +191,7 @@
             <a href="list_interet_mensuel.php">Interet mensuel</a>
             <a href="ajout_pret.php">Ajout de pret</a>
             <a href="simulateur_pret.php">Simulateur de pret</a>
-            <a href="formSimuler.php">Simulateur pour un apreçu de pret</a>
-            <a href="comparerSimulation.php">Comparer les simulations enregistés</a>
+            <a href="remboursement.php">Remboursement</a>
             <a href="#">Deconnexion</a>
         </nav>
         <main class="main-content">

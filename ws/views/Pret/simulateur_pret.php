@@ -232,6 +232,7 @@
             <a href="list_interet_mensuel.php">Intérêt mensuel</a>
             <a href="ajout_pret.php">Ajout de prêt</a>
             <a href="simulateur_pret.php">Simulateur de prêt</a>
+            <a href="remboursement.php">Remboursement</a>
             <a href="#">Déconnexion</a>
         </nav>
         <main class="main-content">
