@@ -80,7 +80,7 @@ class SimulationModel
         }
     }
 
-    public static function validerPret($id_taux_pret, $montant, $duree_mois, $include_assurance)
+    public static function validerPret($id_taux_pret, $montant, $duree_mois, $include_assurance,$id_client,$id_admin = 1)
     {
         if (!$id_taux_pret || $montant <= 0 || $duree_mois <= 0) {
             throw new Exception('Donnees invalides fournies.', 400);
@@ -165,8 +165,8 @@ class SimulationModel
                 VALUES (:id_client, :id_employe, :id_taux_pret, :id_remboursement, :id_taux_assurance, :montant_emprunte, CURRENT_DATE)
             ');
             $stmt->execute([
-                'id_client' => 1, // Supposition : client fixe pour tests
-                'id_employe' => 1, // Supposition : employe fixe pour tests
+                'id_client' => $id_client,
+                'id_employe' => $id_admin,
                 'id_taux_pret' => $id_taux_pret,
                 'id_remboursement' => 1,
                 'id_taux_assurance' => $id_taux_assurance,

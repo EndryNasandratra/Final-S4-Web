@@ -39,7 +39,8 @@ class SimulationController
             Flight::json(['error' => 'Erreur lors de la recuperation des types de prets : ' . $e->getMessage()], 500);
         }
     }
-    public static function getAllClients(){
+    public static function getAllClients()
+    {
 
         try {
             $result = AppModel::getAll("clients");
@@ -66,6 +67,7 @@ class SimulationController
         $id_taux_pret = $data['id_taux_pret'] ?? null;
         $montant = $data['montant'] ?? 0;
         $duree_mois = $data['duree_mois'] ?? 0;
+        $id_client = $data["id_client"] ?? 1;
         $include_assurance = filter_var($data['include_assurance'] ?? false, FILTER_VALIDATE_BOOLEAN);
         $id_type_ressource = $data['id_type_ressource'] ?? null;
 
@@ -73,7 +75,7 @@ class SimulationController
         error_log("validerPret - id_type_ressource: " . $id_type_ressource);
 
         try {
-            $result = SimulationModel::validerPret($id_taux_pret, $montant, $duree_mois, $include_assurance);
+            $result = SimulationModel::validerPret($id_taux_pret, $montant, $duree_mois, $include_assurance,$id_client);
             Flight::json($result);
         } catch (Exception $e) {
             $status = $e->getCode() ?: 500;

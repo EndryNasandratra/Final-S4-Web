@@ -18,13 +18,12 @@ INSERT INTO type_ressource (libelle) VALUES
 ('epargne'); -- epargne
 
 INSERT INTO ressources (id_type_resssource, valeur) VALUES
-(1, 2500.00),
-(1, 3200.50),
-(2, 1200.00),
-(3, 500.75),
-(4, 300.25),
-(5, 15000.00),
-(5, 8000.00);
+(1, 2500000.00),
+(2, 1200000.00),
+(3, 500000.75),
+(4, 3000000.25),
+(5, 1500000.00),
+(5, 8000000.00);
 
 INSERT INTO historique_ressource (id_ressource, valeur, date_historique) VALUES
 (1, 2400, '2023-01-01'),
